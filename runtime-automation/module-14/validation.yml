@@ -1,0 +1,16 @@
+---
+# Module 14 — Validation playbook
+# Multi-task validation — each task outputs ✅ or ❌
+
+- name: Validate Module 14
+  hosts: bastion
+  gather_facts: false
+  become: true
+  vars:
+    ansible_user: "{{ bastion_user | default('lab-user') }}"
+  tasks:
+    - name: Placeholder — replace with actual validation checks
+      validation_check:
+        check: true
+        pass_msg: "✅ Validation placeholder passes"
+        error_msg: "❌ Validation not yet implemented"

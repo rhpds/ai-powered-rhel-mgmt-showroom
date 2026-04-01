@@ -19,62 +19,62 @@ antora:
   dir: www
   modules:
     - name: module-01
-      label: "Module 1"
+      label: "What is Showroom?"
       scripts: [solve, validation]
       solveButton: true
     - name: module-02
-      label: "Module 2"
+      label: "Quick Start"
       scripts: [solve, validation]
       solveButton: true
     - name: module-03
-      label: "Module 3"
+      label: "Creating a Content Repository"
       scripts: [solve, validation]
       solveButton: true
     - name: module-04
-      label: "Module 4"
+      label: "AgnosticV Configuration"
       scripts: [solve, validation]
       solveButton: true
     - name: module-05
-      label: "Module 5"
+      label: "UI Configuration"
       scripts: [solve, validation]
       solveButton: true
     - name: module-06
-      label: "Module 6"
+      label: "User Data and Variables"
       scripts: [solve, validation]
       solveButton: true
     - name: module-07
-      label: "Module 7"
+      label: "Attribute Injection Example"
       scripts: [solve, validation]
       solveButton: true
     - name: module-08
-      label: "Module 8"
+      label: "OCP4 Role Reference"
       scripts: [solve, validation]
       solveButton: true
     - name: module-09
-      label: "Module 9"
+      label: "VM Role Reference"
       scripts: [solve, validation]
       solveButton: true
     - name: module-10
-      label: "Module 10"
+      label: "Architecture"
       scripts: [solve, validation]
       solveButton: true
     - name: module-11
-      label: "Module 11"
+      label: "Showroom Deployer"
       scripts: [solve, validation]
       solveButton: true
     - name: module-12
-      label: "Module 12"
+      label: "Showroom Images"
       scripts: [solve, validation]
       solveButton: true
     - name: module-13
-      label: "Module 13"
+      label: "Nookbag UI"
       scripts: [solve, validation]
       solveButton: true
     - name: module-14
-      label: "Module 14"
+      label: "OCP Integration"
       scripts: [solve, validation]
       solveButton: true
     - name: module-15
-      label: "Module 15"
+      label: "Contributing"
       scripts: [solve, validation]
       solveButton: true
