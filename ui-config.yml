@@ -1,9 +1,7 @@
 ---
-type: showroom
+type: zero-touch
 
-# Set the left column width to 30%
 default_width: 30
-# Persist the URL state so browser refresh doesn't reset the UI
 persist_url_state: true
 
 view_switcher:
@@ -11,8 +9,21 @@ view_switcher:
   default_mode: split
 
 tabs:
-   - name: '>_Terminal-01'
-      path: /wetty
-      port: 443
-    - name: 'Satellite'
-      url: "https://satellite-{{ subdomain }}"
+  - name: '>_Terminal-01'
+    path: /wetty
+    port: 443
+  - name: 'Satellite'
+    url: "https://satellite-{{ subdomain }}"
+
+antora:
+  name: modules
+  dir: www
+  modules:
+    - name: module-01
+      label: "Module 1"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-02
+      label: "Module 2"
+      scripts: [solve, validation]
+      solveButton: true
