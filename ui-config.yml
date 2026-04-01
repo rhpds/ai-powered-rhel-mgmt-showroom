@@ -12,8 +12,7 @@ tabs:
   - name: '>_Terminal-01'
     path: /wetty
     port: 443
-  - name: 'Satellite'
-    url: "https://satellite-{{ subdomain }}"
+
 
 antora:
   name: modules
@@ -25,5 +24,57 @@ antora:
       solveButton: true
     - name: module-02
       label: "Module 2"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-03
+      label: "Module 3"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-04
+      label: "Module 4"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-05
+      label: "Module 5"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-06
+      label: "Module 6"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-07
+      label: "Module 7"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-08
+      label: "Module 8"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-09
+      label: "Module 9"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-10
+      label: "Module 10"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-11
+      label: "Module 11"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-12
+      label: "Module 12"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-13
+      label: "Module 13"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-14
+      label: "Module 14"
+      scripts: [solve, validation]
+      solveButton: true
+    - name: module-15
+      label: "Module 15"
       scripts: [solve, validation]
       solveButton: true
