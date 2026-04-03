@@ -1,4 +1,4 @@
-:imagesdir: ../assets/images
+:imagesdir: ../images
 
 = Welcome to Infinicorp - we need your help to test our new MCP workflows!
 
