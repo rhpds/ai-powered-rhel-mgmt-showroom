@@ -1,180 +1,184 @@
-= Quick Start
-:navtitle: Quick Start
+:imagesdir: ../images
 
-This page walks you through the fastest path to a working Showroom lab on the Red Hat Demo Platform.
-Pick the track that matches your environment type.
+= Verifying connectivity to the MCP Agents 
+To start out your experience with Infinicorp, we need to validate that the setup is working properly.
 
-== Before You Begin
+This module will get you into goose, validate that the mcp servers are connected, and run a couple of test prompts.
 
-You will need:
+*Expand a section below to complete the tasks in that section.* +  
+*Please complete each section in order.*
 
-* A content repository with your Antora lab instructions (or a fork of the https://github.com/rhpds/showroom_template_nookbag[template]).
-See xref:content-repo.adoc[] if you have not created one yet.
-* Access to the https://github.com/rhpds/agnosticv[agnosticv] repository to create or edit a catalog item.
-* Familiarity with YAML and basic Ansible concepts.
+=====
+.Start Goose
+[%collapsible]
+====
+You will be using the MCP Server Terminal for most of these exercises. 
+You should see that in the showroom on the right pane beside these instructions. 
 
-== Path A -- OpenShift 4 Workload
+Goose also has a user interface, but you’ll be using the CLI. 
 
-Use this path when your lab provisions an OpenShift cluster and Showroom runs as a pod on that cluster.
+Your system name is: `mcp-{guid}` +
 
-=== 1. Add the collection to your catalog item
+NOTE: Hosts in your environment all contain {guid}. In a shared environment like the inventory at console.redhat.com, you might see similar named hosts, but this unique identifier is for your systems.  
 
-In your catalog item's `common.yaml`, declare the Showroom collection as a dependency:
+In the MCP terminal window, start a tmux session by running: 
 
-[source,yaml,subs="+attributes"]
+[source,bash,run]
 ----
-requirements_content:
-  collections:
-    - name: https://github.com/agnosticd/showroom.git
-      type: git
-      version: {showroom-collection-version}
+tmux
 ----
 
-=== 2. List the workloads
+Then, start a goose session by running: 
 
-Add the Showroom workload to your workloads list.
-Showroom should come **last** so that all infrastructure and credentials are available:
-
-[source,yaml]
+[source,bash,run]
 ----
-workloads:
-  - ocp4_workload_my_operators        # your infra workloads first
-  - agnosticd.showroom.ocp4_workload_showroom
+goose session
 ----
 
-If you want the OpenShift web console embedded as an iframe tab, add `ocp4_workload_ocp_console_embed` before the main Showroom workload.
-See xref:ocp-integration.adoc[].
+This will start the goose session 
 
-=== 3. Point to your content repo
+NOTE: Without running tmux the environment will appear to enter strange spaces if you are manually typing commands. + 
+That is to be expected.  +
+Running tmux first gives a smoother expereince for the lab - this isn't something you would need to do outside of Infinicorp's virtual environment that was provisioned for you.
 
-[source,yaml]
+====
+=====
+
+
+=====
+.Verify MCP Server connectivity
+[%collapsible]
+====
+
+With Goose started, the next thing you should do is verify that the various MCP servers are connected.  You have 3 different MCP servers installed on the same host, so we need to check that they are all connected.  
+As a reminder, the three MCP servers are:
+
+* Red Hat Lightspeed (formerly known as Red Hat Insights) MCP
+* Red Hat Satellite MCP
+* Red Hat Enterprise Linux MCP
+
+Make sure you are in the goose session, and run the following prompt:
+[source,bash,run]
 ----
-ocp4_workload_showroom_content_git_repo: https://github.com/yourorg/your-lab-content.git
-ocp4_workload_showroom_content_git_repo_ref: main
-----
-
-=== 4. Enable dev mode while developing
-
-In your catalog item's `dev.yaml`, enable dev mode so you can see all AsciiDoc attributes and unlisted pages while building your content:
-
-[source,yaml]
-----
-ocp4_workload_showroom_enable_dev_mode: true
-----
-
-IMPORTANT: Always set this in `dev.yaml`, *never* in `common.yaml` or `prod.yaml`.
-Dev mode is a development-time aid -- it should not be visible to end users.
-
-See xref:content-repo.adoc#_dev_mode[Dev Mode] for details on what it provides.
-
-=== 5. Pin the version for production
-
-In `prod.yaml`, always pin the content branch to a tag or a known-good commit -- never ship `main` to production:
-
-[source,yaml]
-----
-ocp4_workload_showroom_content_git_repo_ref: v1.0.0
+List the available tools and MCP servers you are currently connected to.
 ----
 
-=== 6. Order from the catalog
+The output will include a variety of MCP extensions and tools. 
+Review the output and make sure that you see the following listed: 
+NOTE: You may need to scroll up to see the output like the above image. The lightspeedmcp server contains individual servers for several different services like Advisor and Inventory.  This prompt will also give information about these servers.
 
-Once your catalog item is merged and synced, order it from https://demo.redhat.com[demo.redhat.com].
-The provisioned environment will include a Showroom URL in the access information.
+====
+=====
 
-=== Working example
 
-The https://github.com/rhpds/agnosticv/tree/main/tests/showroom-ocp4[tests/showroom-ocp4] catalog item is a complete, minimal example of this path.
-It deploys Showroom with the `ocp-example` branch of the template, a Wetty terminal with auto-SSH to the bastion, and the OCP console embed workload.
+=====
+.Query Hybrid Cloud Console inventory
+[%collapsible]
+====
 
----
+Goose says you’re connected, but to be completely sure, you should run a prompt to verify.  Start with asking how many systems are connected to Red Hat Lightspeed at the Hybrid Cloud Console (also known as console.redhat.com) by running the following prompt:
 
-== Path B -- VM Workload
-
-Use this path when your lab provisions VMs (typically on OpenShift CNV) and Showroom runs on the bastion host via Podman.
-
-=== 1. Add the collection to your catalog item
-
-[source,yaml,subs="+attributes"]
+[source,bash,run]
 ----
-requirements_content:
-  collections:
-    - name: https://github.com/agnosticd/showroom.git
-      type: git
-      version: {showroom-collection-version}
+How many systems are connected to Red Hat Lightspeed? 
 ----
+NOTE: The number of systems you see in the response will be different from the image above.  This is expected.
 
-=== 2. Include the role in post-software workloads
+The returned result is the number of systems connected to Red Hat Lightspeed.
+This confirms that Goose is able to communicate with the APIs over at the Hybrid Cloud Console using the Red Hat Lightspeed MCP server..
 
-The VM role runs on the bastion host after all other provisioning is complete:
+====
+=====
 
-[source,yaml]
+=====
+.Query Satellite inventory
+[%collapsible]
+====
+
+Now to check the Satellite MCP server, ask Goose what systems are connected to the Satellite.
+
+[source,bash,run]
 ----
-post_software_final_workloads:
-  bastions:
-    - agnosticd.showroom.vm_workload_showroom
-----
-
-=== 3. Point to your content repo
-
-[source,yaml]
-----
-showroom_git_repo: https://github.com/yourorg/your-lab-content.git
-showroom_git_ref: main
+What hosts are connected to my Satellite? 
 ----
 
-=== 4. Configure terminals
+The results will list the servers connected to your Satellite.  
+Unlike the Hybrid Cloud Console inventory which is shared, the Satellite inventory is a private environment - you will not see other people’s systems and you will only see your two hosts.
 
-Enable one or more tab services:
+This confirms that Goose is able to communicate with your Satellite server using the Satellite MCP server.
 
-[source,yaml]
+=====
+.Query RHEL specifics
+[%collapsible]
+====
+
+The RHEL MCP server looks in more detail at specific systems - to test it out you’ll need to ask about a specific RHEL system.
+
+[source,bash,run]
 ----
-showroom_tab_services:
-  - single_terminal
-
-showroom_ssh_method: password
-showroom_ssh_host: host.containers.internal
-showroom_ssh_username: lab-user
-showroom_ssh_password: "{{ common_password }}"
-----
-
-=== 5. Set the hostname and TLS
-
-[source,yaml]
-----
-showroom_host: "{{ bastion_public_hostname }}"
-showroom_tls_provider: zerossl           # or 'letsencrypt' or 'none'
+Check the current CPU load and memory usage for rhel-{guid}-1 
 ----
 
-=== 6. Enable dev mode while developing
+This will return basic information about CPU type and utilization along with memory utilization. 
 
-In your catalog item's `dev.yaml`, enable dev mode:
+This confirms that Goose is able to communicate with your RHEL hosts using the RHEL MCP server.
 
-[source,yaml]
+====
+=====
+
+
+=====
+.Access to Hybrid Cloud Console and Satellite UI
+[%collapsible]
+====
+The primary interface for this lab will be the mcp host with the goose terminal. 
+You do not need to access the Hybrid Cloud Console or the Satellite UI for any reason in this lab. 
+
+However - we know you may want to do so. 
+The credentials are shared at the bottom of each module for convenience. 
+
+**Hybrid Cloud Console**
+
+Use a web browser to navigate to the https://console.redhat.com[Hybrid Cloud Console^] <-- Click to open in a new tab. +
+Log into the Hybrid Cloud Console with the following credentials: +
+
+User:
+[source,sh,role=execute]
 ----
-showroom_enable_dev_mode: true
+ rhpd-lightspeed-lb1305
 ----
 
-IMPORTANT: Always set this in `dev.yaml`, *never* in `common.yaml` or `prod.yaml`.
-Dev mode is a development-time aid -- it should not be visible to end users.
-
-See xref:content-repo.adoc#_dev_mode[Dev Mode] for details on what it provides.
-
-=== 7. Pin the version for production
-
-In `prod.yaml`:
-
-[source,yaml]
+Password:
+[source,sh,role=execute]
 ----
-showroom_git_ref: v1.0.0
+rhdp*lightspeed2026!
 ----
 
-=== Working example
+**Satellite**
 
-The https://github.com/rhpds/agnosticv/tree/main/tests/showroom-vm[tests/showroom-vm] catalog item is a complete, minimal example.
-It deploys Showroom on a bastion VM with two terminals and the `vm-example` branch of the template.
+To log into the Satellite UI, use a web browser to navigate to the https://satellite-{guid}.apps.ocpvdev01.rhdp.net[Satellite UI^].
 
-== Next Steps
+To log in, you’ll need the following credentials to log into the Satellite Web UI.
 
-* xref:content-repo.adoc[] -- learn how to structure your content repo, configure Antora, and develop locally.
-* xref:agnosticv-config.adoc[] -- deeper coverage of AgnosticV wiring, real-world examples, and common patterns.
-* xref:user-data.adoc[] -- understand how runtime variables flow into your AsciiDoc content.
+You can copy and paste each of them below.
+
+[source,js]
+----
+admin
+----
+
+[source,js]
+----
+{satellite_password}
+----
+
+Now click `+Log In+`.
+
+
+====
+=====
+
+
+After running this series of checks you now know that the various MCP servers are working in your environment and you’re ready to dig in a little deeper. 
+
+Continue to the next module.
