@@ -12,20 +12,19 @@ tabs:
   - name: '>_Terminal-01'
     path: /wetty
     port: 443
-
+  - name: "MCP-{guid} terminal"
+    url: /wetty_mcp-{guid}/ssh/lab-user
 
 antora:
   name: modules
   dir: www
   modules:
     - name: module-01
-      label: "What is Showroom?"
-      scripts: [solve, validation]
-      solveButton: true
+      label: "Infinicorp Overview"
+      solveButton: false
     - name: module-02
-      label: "Quick Start"
-      scripts: [solve, validation]
-      solveButton: true
+      label: "Verify Connectivity"
+      solveButton: false
     - name: module-03
       label: "Creating a Content Repository"
       scripts: [solve, validation]
