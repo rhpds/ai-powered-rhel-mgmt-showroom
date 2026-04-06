@@ -9,11 +9,11 @@ view_switcher:
   default_mode: split
 
 tabs:
+  - name: "MCP-${guid} terminal"
+    url: /wetty_mcp-{guid}/ssh/lab-user
   - name: '>_Terminal-01'
     path: /wetty
     port: 443
-  - name: "MCP-{guid} terminal"
-    url: /wetty_mcp-{guid}/ssh/lab-user
 
 antora:
   name: modules
