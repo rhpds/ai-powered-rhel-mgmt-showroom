@@ -15,11 +15,20 @@ This module will get you into goose, validate that the mcp servers are connected
 You will be using the MCP Server Terminal for most of these exercises. 
 You should see that in the showroom on the right pane beside these instructions. 
 
-Goose also has a user interface, but you’ll be using the CLI. 
+You’re in the lab bastion or jump host, and you need to ssh into the mcp host which is where you’ll be running your commands.
+In the terminal run the command:
 
-Your system name is: `mcp-{guid}` +
+[source,bash,run]
+----
+ssh mcp-{guid}
+----
+
+You should now be connected to:
+`[lab-user@mcp-{guid}` +
 
 NOTE: Hosts in your environment all contain {guid}. In a shared environment like the inventory at console.redhat.com, you might see similar named hosts, but this unique identifier is for your systems.  
+
+Goose also has a user interface, but you’ll be using the CLI.
 
 In the MCP terminal window, start a tmux session by running: 
 
