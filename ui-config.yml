@@ -10,7 +10,7 @@ view_switcher:
 
 tabs:
   - name: "MCP-${guid} terminal"
-    url: /wetty_mcp-${guid}/ssh/lab-user
+    url: /wetty_mcp-${guid}
   - name: '>_Terminal-01'
     path: /wetty
     port: 443
