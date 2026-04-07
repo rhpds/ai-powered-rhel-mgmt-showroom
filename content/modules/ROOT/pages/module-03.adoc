@@ -88,7 +88,7 @@ Let’s try a variation of that prompt for the backend systems which are rhel-3-
 
 [source, role="execute", subs="attributes"]
 ----
-Use both the Lightspeed MCP and the RHEL MCP servers to evaluate the postgresql database on rhel-3-{guid} for optimizations and best practices that I can use to improve performance.
+Use both the Satellite MCP and the RHEL MCP servers to evaluate the postgresql database on rhel-3-{guid} and rhel-4-{guid} for optimizations and best practices that I can use to improve performance.
 ----
 
 From the output you should see a similar list of suggestions including applying the tuned profile, updating system packages, and upgrading the postgresql version.
