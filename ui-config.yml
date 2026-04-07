@@ -11,9 +11,9 @@ view_switcher:
   default_mode: split
 
 tabs:
-    - name: '>_Bastion'
-      path: /wetty
-      port: 443
     - name: '>_MCP_Host'
       path: /terminal2
+      port: 443
+    - name: '>_Bastion'
+      path: /wetty
       port: 443
