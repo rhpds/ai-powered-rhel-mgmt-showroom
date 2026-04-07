@@ -18,7 +18,7 @@ You should see that in the showroom on the right pane beside these instructions.
 You’re in the lab bastion or jump host, and you need to ssh into the mcp host which is where you’ll be running your commands.
 In the terminal run the command:
 
-[source,bash,subs="attributes"]
+[source, role="execute", subs="attributes"]
 ----
 ssh mcp-{guid}
 ----
@@ -32,14 +32,14 @@ Goose also has a graphical user interface (GUI), but you’ll be using the CLI.
 
 In the MCP terminal window, start a tmux session by running: 
 
-[source,bash,run]
+[source, role="execute", subs="attributes"]
 ----
 tmux
 ----
 
 Then, start a goose session by running: 
 
-[source,bash,run]
+[source, role="execute", subs="attributes"]
 ----
 goose session
 ----
@@ -52,7 +52,7 @@ Running tmux first gives a smoother experience for the lab - this isn't somethin
 
 Before beginning the exercises, provide the client with some instructions on how to behave.  This prompt can help reduce AI hallucinations and can help remove prompts just asking you to confirm that you want to run necessary API calls or commands to get the information that you are requesting. 
 
-[source,bash,run]
+[source, role="execute", subs="attributes"]
 ----
 You are an agent specializing in management of Red Hat Enterprise Linux hosts.  You are leveraging MCP servers for Lightspeed (lightspeedmcp), Satellite (satellitemcp), and RHEL(linux_mcp_server).  The Lightspeed mcp server works with hosts connected through console.redhat.com, the satellite mcp server works with hosts connected to Red Hat Satellite, and the RHEL mcp server works on the individual RHEL hosts to get more detailed system specific information.  
 If the query contains “satellite”, ONLY ask satellitemcp to answer that query.
@@ -83,7 +83,8 @@ As a reminder, the three MCP servers are:
 * Red Hat Enterprise Linux MCP
 
 Make sure you are in the goose session, and run the following prompt:
-[source,bash,run]
+
+[source, role="execute", subs="attributes"]
 ----
 Give me a simple list of the MCP servers you are currently connected to.
 ----
@@ -102,10 +103,11 @@ Review the output and make sure that you see the following listed:
 
 Goose says you’re connected, but to be completely sure, you should run a prompt to verify.  Start with asking how many systems are connected to Red Hat Lightspeed at the Hybrid Cloud Console (also known as console.redhat.com) by running the following prompt:
 
-[source,bash,run]
+[source, role="execute", subs="attributes"]
 ----
 How many systems are connected to Red Hat Lightspeed? 
 ----
+
 NOTE: The number of systems you see in the response will be different from the image above.  This is expected.
 
 The returned result is the number of systems connected to Red Hat Lightspeed.
@@ -121,7 +123,7 @@ This confirms that Goose is able to communicate with the APIs over at the Hybrid
 
 Now to check the Satellite MCP server, ask Goose what systems are connected to the Satellite.
 
-[source,bash,run]
+[source, role="execute", subs="attributes"]
 ----
 What hosts are connected to my Satellite? 
 ----
@@ -141,7 +143,7 @@ This confirms that Goose is able to communicate with your Satellite server using
 
 The RHEL MCP server looks in more detail at specific systems - to test it out you’ll need to ask about a specific RHEL system.
 
-[source,bash,subs="attributes"]
+[source, role="execute", subs="attributes"]
 ----
 Check the current CPU load and memory usage for rhel-1-{guid} 
 ----
@@ -158,6 +160,7 @@ This confirms that Goose is able to communicate with your RHEL hosts using the R
 .Access to Hybrid Cloud Console and Satellite UI
 [%collapsible]
 ====
+
 The primary interface for this lab will be the mcp host with the goose terminal. 
 You do not need to access the Hybrid Cloud Console or the Satellite UI for any reason in this lab. 
 
@@ -170,13 +173,13 @@ Use a web browser to navigate to the https://console.redhat.com[Hybrid Cloud Con
 Log into the Hybrid Cloud Console with the following credentials: +
 
 User:
-[source,sh,role=execute]
+[source, role="execute", subs="attributes"]
 ----
  rhpd-lightspeed-lb1305
 ----
 
 Password:
-[source,sh,role=execute]
+[source, role="execute", subs="attributes"]
 ----
 rhdp*lightspeed2026!
 ----
@@ -189,12 +192,12 @@ To log in, you’ll need the following credentials to log into the Satellite Web
 
 You can copy and paste each of them below.
 
-[source,js]
+[source, role="execute", subs="attributes"]
 ----
 admin
 ----
 
-[source,js]
+[source, role="execute", subs="attributes"]
 ----
 {satellite_password}
 ----
