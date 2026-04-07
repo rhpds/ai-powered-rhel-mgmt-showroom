@@ -1,7 +1,9 @@
 ---
-type: zero-touch
+type: showroom
 
+# Set the left column width to 30%
 default_width: 30
+# Persist the URL state so browser refresh doesn't reset the UI
 persist_url_state: true
 
 view_switcher:
@@ -9,69 +11,9 @@ view_switcher:
   default_mode: split
 
 tabs:
-  - name: '>_Terminal-01'
-    path: /wetty
-    port: 443
-
-antora:
-  name: modules
-  dir: www
-  modules:
-    - name: module-01
-      label: "Infinicorp Overview"
-      solveButton: false
-    - name: module-02
-      label: "Verify Connectivity"
-      solveButton: false
-    - name: module-03
-      label: "Creating a Content Repository"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-04
-      label: "AgnosticV Configuration"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-05
-      label: "UI Configuration"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-06
-      label: "User Data and Variables"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-07
-      label: "Attribute Injection Example"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-08
-      label: "OCP4 Role Reference"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-09
-      label: "VM Role Reference"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-10
-      label: "Architecture"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-11
-      label: "Showroom Deployer"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-12
-      label: "Showroom Images"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-13
-      label: "Nookbag UI"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-14
-      label: "OCP Integration"
-      scripts: [solve, validation]
-      solveButton: true
-    - name: module-15
-      label: "Contributing"
-      scripts: [solve, validation]
-      solveButton: true
+    - name: '>_Bastion'
+      path: /wetty
+      port: 443
+    - name: '>_MCP_Host'
+      path: /terminal2
+      port: 443
