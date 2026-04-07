@@ -18,17 +18,17 @@ You should see that in the showroom on the right pane beside these instructions.
 You’re in the lab bastion or jump host, and you need to ssh into the mcp host which is where you’ll be running your commands.
 In the terminal run the command:
 
-[source,bash,run]
+[source,bash,subs="attributes"]
 ----
 ssh mcp-{guid}
 ----
 
 You should now be connected to:
-`[lab-user@mcp-{guid}` +
+`lab-user@mcp-{guid}` +
 
 NOTE: Hosts in your environment all contain {guid}. In a shared environment like the inventory at console.redhat.com, you might see similar named hosts, but this unique identifier is for your systems.  
 
-Goose also has a user interface, but you’ll be using the CLI.
+Goose also has a graphical user interface (GUI), but you’ll be using the CLI.
 
 In the MCP terminal window, start a tmux session by running: 
 
@@ -48,7 +48,23 @@ This will start the goose session
 
 NOTE: Without running tmux the environment will appear to enter strange spaces if you are manually typing commands. + 
 That is to be expected.  +
-Running tmux first gives a smoother expereince for the lab - this isn't something you would need to do outside of Infinicorp's virtual environment that was provisioned for you.
+Running tmux first gives a smoother experience for the lab - this isn't something you would need to do outside of Infinicorp's virtual environment that was provisioned for you.
+
+Before beginning the exercises, provide the client with some instructions on how to behave.  This prompt can help reduce AI hallucinations and can help remove prompts just asking you to confirm that you want to run necessary API calls or commands to get the information that you are requesting. 
+
+[source,bash,run]
+----
+You are an agent specializing in management of Red Hat Enterprise Linux hosts.  You are leveraging MCP servers for Lightspeed (lightspeedmcp), Satellite (satellitemcp), and RHEL(linux_mcp_server).  The Lightspeed mcp server works with hosts connected through console.redhat.com, the satellite mcp server works with hosts connected to Red Hat Satellite, and the RHEL mcp server works on the individual RHEL hosts to get more detailed system specific information.  
+If the query contains “satellite”, ONLY ask satellitemcp to answer that query.
+You ONLY interact with users by calling tools.
+STRICT RULES:
+NEVER write code, scripts, or pseudocode of any kind.
+NEVER explain what you are going to do, just do it by calling tools.
+NEVER output internal reasoning or thinking.
+ALWAYS call the tools directly and present only the final results to the user.
+----
+
+With the Goose session started and with the behavior prompt entered, continue to the next step.
 
 ====
 =====
@@ -69,12 +85,11 @@ As a reminder, the three MCP servers are:
 Make sure you are in the goose session, and run the following prompt:
 [source,bash,run]
 ----
-List the available tools and MCP servers you are currently connected to.
+Give me a simple list of the MCP servers you are currently connected to.
 ----
 
 The output will include a variety of MCP extensions and tools. 
 Review the output and make sure that you see the following listed: 
-NOTE: You may need to scroll up to see the output like the above image. The lightspeedmcp server contains individual servers for several different services like Advisor and Inventory.  This prompt will also give information about these servers.
 
 ====
 =====
@@ -116,6 +131,9 @@ Unlike the Hybrid Cloud Console inventory which is shared, the Satellite invento
 
 This confirms that Goose is able to communicate with your Satellite server using the Satellite MCP server.
 
+====
+=====
+
 =====
 .Query RHEL specifics
 [%collapsible]
@@ -123,9 +141,9 @@ This confirms that Goose is able to communicate with your Satellite server using
 
 The RHEL MCP server looks in more detail at specific systems - to test it out you’ll need to ask about a specific RHEL system.
 
-[source,bash,run]
+[source,bash,subs="attributes"]
 ----
-Check the current CPU load and memory usage for rhel-{guid}-1 
+Check the current CPU load and memory usage for rhel-1-{guid} 
 ----
 
 This will return basic information about CPU type and utilization along with memory utilization. 
@@ -182,7 +200,6 @@ admin
 ----
 
 Now click `+Log In+`.
-
 
 ====
 =====
