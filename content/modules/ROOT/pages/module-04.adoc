@@ -1,269 +1,154 @@
-= AgnosticV Configuration
-:navtitle: AgnosticV Configuration
 
-This page explains how to wire up the `agnosticd.showroom` collection in an https://github.com/rhpds/agnosticv[AgnosticV] catalog item so that Showroom is deployed alongside your lab environment.
+:imagesdir: ../images
 
-== Collection Dependency
 
-Every catalog item that uses Showroom must declare the collection in `requirements_content`.
-This tells AgnosticD to install the collection before running workloads:
+= Security Review 
 
-[source,yaml,subs="+attributes"]
-----
-requirements_content:
-  collections:
-    - name: https://github.com/agnosticd/showroom.git
-      type: git
-      version: {showroom-collection-version}    # <1>
-----
-<1> Always pin to a specific release tag. Use https://github.com/agnosticd/showroom/tags[the tags list] to find the latest version.
+Security is always a top concern at Infinicorp. +
 
-== Workload Ordering
+While you got a feel for the PostgreSQL workload in the last module, you didn’t really focus on the security aspect in that module. + 
+In this module, let’s dig into security. +
 
-=== OCP4 Deployments
+This module will have you querying Goose to check on overall security status and identifying potential problem areas that need to be addressed.
 
-Add Showroom workloads to the `workloads` list.
-**Order matters** -- Showroom should come last so that all infrastructure roles have finished writing credentials and URLs to `user_data`:
-
-[source,yaml]
-----
-workloads:
-  - ocp4_workload_my_operators
-  - ocp4_workload_my_app
-  - agnosticd.showroom.ocp4_workload_ocp_console_embed  # <1>
-  - agnosticd.showroom.ocp4_workload_showroom            # <2>
-----
-<1> Optional -- enables OCP console embedding in Showroom iframes. See xref:ocp-integration.adoc[].
-<2> The main Showroom deployment. Must be last.
-
-=== VM Deployments
-
-The VM role runs as a post-software workload on the bastion host:
-
-[source,yaml]
-----
-post_software_final_workloads:
-  bastions:
-    - agnosticd.showroom.vm_workload_showroom
-----
-
-Pre-software workloads like `bastion` (for SSH user setup) and `host_common_packages` should run first in `pre_software_workloads`.
-
-== Content Repository Settings
-
-=== OCP4
-
-[source,yaml]
-----
-ocp4_workload_showroom_content_git_repo: https://github.com/yourorg/your-lab-content.git
-ocp4_workload_showroom_content_git_repo_ref: main
-----
-
-=== VM
-
-[source,yaml]
-----
-showroom_git_repo: https://github.com/yourorg/your-lab-content.git
-showroom_git_ref: main
-----
-
-== Version Pinning for Production
-
-[IMPORTANT]
-====
-Production catalog items (`prod.yaml`) **must** pin the content repo ref to a tag or known-good commit.
-Never ship `main` to production -- it can change at any time and break a live lab.
+=====
+.Start Goose
+[%collapsible]
 ====
 
-In `common.yaml`, use `main` for development convenience:
+You should already have the MCP Server Terminal open from the previous module. +
+If it isn’t already running, in the MCP terminal window, start a goose session by running: 
 
-[source,yaml]
+[source,bash,run]
 ----
-ocp4_workload_showroom_content_git_repo_ref: main
-----
-
-In `prod.yaml`, override with a release tag:
-
-[source,yaml]
-----
-ocp4_workload_showroom_content_git_repo_ref: v1.0.0
+goose session
 ----
 
-This pattern is used by all production catalog items. For example, https://github.com/rhpds/agnosticv/blob/main/agd_v2/aap-multiinstance-workshop/prod.yaml[aap-multiinstance-workshop/prod.yaml] overrides the ref to a specific branch.
+This will start the goose session 
 
-== Catalog Item Structure
+====
+=====
 
-A typical catalog item directory looks like:
 
-[source,text]
+=====
+.Check for General Security Concerns
+[%collapsible]
+====
+
+Start with asking Goose to give you a report on the security posture.  +
+In this prompt you’ll ask all three MCP servers to contribute to the report to help you understand at a high level where things stand at this moment.
+
+[source, role="execute", subs="attributes"]
 ----
-agd_v2/my-workshop/
-├── common.yaml          # shared config (content repo, workloads, variables)
-├── dev.yaml             # development overrides (optional)
-├── prod.yaml            # production overrides (pinned versions)
-├── description.adoc     # catalog description shown on demo.redhat.com
-└── info-message-template.adoc  # access info template
-----
-
-`common.yaml` contains the bulk of the configuration.
-`prod.yaml` and `dev.yaml` override specific values for each stage.
-
-== Real-World Examples
-
-=== OCP4 -- Minimal (test catalog item)
-
-https://github.com/rhpds/agnosticv/tree/main/tests/showroom-ocp4[tests/showroom-ocp4/common.yaml] -- deploys Showroom on an OpenShift cluster with Wetty terminal and OCP console embed:
-
-[source,yaml]
-----
-requirements_content:
-  collections:
-    - name: https://github.com/agnosticd/showroom.git
-      type: git
-      version: "{{ showroom_collection_version }}"
-
-workloads:
-  - agnosticd.showroom.ocp4_workload_ocp_console_embed
-  - agnosticd.showroom.ocp4_workload_showroom
-
-ocp4_workload_showroom_content_git_repo: https://github.com/rhpds/showroom_template_nookbag.git
-ocp4_workload_showroom_content_git_repo_ref: ocp-example
-ocp4_workload_showroom_content_antora_playbook: site.yml
-ocp4_workload_showroom_terminal_type: wetty
-ocp4_workload_showroom_wetty_ssh_bastion_login: true
+I need a report to share with my security operations team to assess the current security posture of our installed servers. Can you provide all the relevant information of my install base (security advisories, vulnerabilities, compliance data, and malware) with the available data from the Lightspeed, Satellite, and RHEL tools?
 ----
 
-=== VM -- Minimal (test catalog item)
+The output should show you key findings including the number of systems, a summary of operating system versions, any high risk CVEs, any advisor recommendations. +
+It should also include top actions that you should take immediately to help address these issues. +
 
-https://github.com/rhpds/agnosticv/tree/main/tests/showroom-vm[tests/showroom-vm/common.yaml] -- deploys Showroom on a bastion VM with two terminals:
+Since you specified a report in your prompt, it should be in a format that you could copy and paste into an email or ticketing system to help you justify any maintenance windows that you might need to schedule for this work.
 
-[source,yaml]
+====
+=====
+
+=====
+.Create a security focused remediation plan
+[%collapsible]
+====
+
+Now you should really delve into Vulnerabilities.  
+
+Lets get a high level overview of CVEs first, then work on a remediation plan. 
+
+[source, role="execute", subs="attributes"]
 ----
-requirements_content:
-  collections:
-    - name: https://github.com/agnosticd/showroom.git
-      type: git
-      version: "{{ showroom_collection_version }}"
-
-post_software_final_workloads:
-  bastions:
-    - agnosticd.showroom.vm_workload_showroom
-
-showroom_git_repo: https://github.com/rhpds/showroom_template_nookbag.git
-showroom_git_ref: vm-example
-showroom_tls_provider: none
-showroom_tab_services:
-  - single_terminal
-  - second_terminal
+Give me a count of all CVEs that affect my environment AND list the top 5 most important to fix based on the criticality of the vulnerability.
 ----
 
-=== OCP4 -- Production workshop
+This will give you a total count of CVEs to address across all of your systems. + 
+Then it should give you the top 5 most important with a summary of each. It may even recommend a timeline for fixes. +
 
-https://github.com/rhpds/agnosticv/tree/main/agd_v2/aap-multiinstance-workshop[agd_v2/aap-multiinstance-workshop] -- a real production workshop that uses Showroom with OCP integration:
+If it can create a timeline to fix the top 5 CVEs, maybe it can help create a plan to get the whole environment into shape. +
 
-[source,yaml]
+Some of these systems aren’t in your environment, so you should do like you did in the last module and focus on frontend and backend systems separately while calling your guid - {guid}. 
+
+Start with the frontend systems:
+
+[source, role="execute", subs="attributes"]
 ----
-workloads:
-  # ... other workloads ...
-  - agnosticd.showroom.ocp4_workload_ocp_console_embed
-  - agnosticd.showroom.ocp4_workload_showroom
-
-ocp4_workload_showroom_content_git_repo: https://github.com/rhpds/aap-selfserv-intro-showroom.git
-ocp4_workload_showroom_content_git_repo_ref: main
-----
-
-With `prod.yaml` overriding the ref:
-
-[source,yaml]
-----
-ocp4_workload_showroom_content_git_repo_ref: lb1652-aap-self-service
+Use both the Lightspeed MCP and the RHEL MCP servers to help me create a plan to address important and critical CVEs for rhel-1-{guid} and rhel-2-{guid}. 
 ----
 
-=== OCP4 -- Content-only mode
+After you finish reviewing the results, repeat with the backend systems. +
 
-https://github.com/rhpds/agnosticv/tree/main/agd_v2/mcp-with-openshift[agd_v2/mcp-with-openshift] -- deploys Showroom in content-only mode (no terminal container):
-
-[source,yaml]
+[source, role="execute", subs="attributes"]
 ----
-ocp4_workload_showroom_content_git_repo: https://github.com/rhpds/lb1726-mcp-showroom
-ocp4_workload_showroom_content_git_repo_ref: main
-ocp4_workload_showroom_content_only: true
+Use ONLY the Satellite MCP AND the RHEL MCP servers to help me create a plan to address important and critical CVEs for rhel-3-{guid} and rhel-4-{guid}. 
 ----
 
-=== OCP4 -- Passthrough user data
+This helps you see target output from the backend servers connected to your Satellite.  +
+Since they were made from the same base image, the information should be similar, but it may be affected by the Satellite content views as to what fixes are available. +
 
-https://github.com/rhpds/agnosticv/tree/main/openshift_cnv/ocp-virt-admin-rosetta[openshift_cnv/ocp-virt-admin-rosetta] -- uses `passthrough_user_data` to forward provisioning data to content:
+Now, you should see about a report that is informed by all of the various MCP servers that you have access to.  +
+To help focus it, let’s get even more specifc on the systems and tools used.
 
-[source,yaml]
-----
-ocp4_workload_showroom_content_git_repo: https://github.com/rhpds/ocp-virt-admin-rosetta-showroom.git
-ocp4_workload_showroom_content_git_repo_ref: main
-ocp4_workload_showroom_terminal_type: showroom
-ocp4_workload_showroom_passthrough_user_data: true
-----
 
-== Common Patterns
-
-Enabling dev mode for development::
-Dev mode is a diagnostic tool every content developer should use.
-It adds an _Attributes_ reference page and shows unlisted pages in the sidebar.
-+
-Enable it in `dev.yaml` -- *never* in `common.yaml` or `prod.yaml`:
-+
-[cols="1a,1a",options="header"]
-|===
-|OCP4 (`dev.yaml`) |VM (`dev.yaml`)
-
-|
-[source,yaml]
+[source, role="execute", subs="attributes"]
 ----
-ocp4_workload_showroom_enable_dev_mode: true
-----
-|
-[source,yaml]
-----
-showroom_enable_dev_mode: true
-----
-|===
-+
-See xref:content-repo.adoc#_dev_mode[Dev Mode] for what it provides and xref:ocp4-role-reference.adoc#_dev_mode[OCP4] / xref:vm-role-reference.adoc#_dev_mode[VM] role references for the full variable list.
-
-Exposing catalog parameters for development::
-Make the collection version and dev-mode overridable from the catalog order form:
-+
-[source,yaml,subs="+attributes"]
-----
-__meta__:
-  catalog:
-    parameters:
-      - name: showroom_collection_version
-        formLabel: Showroom Collection Version
-        openAPIV3Schema:
-          type: string
-          default: '{showroom-collection-version}'
-      - name: ocp4_workload_showroom_enable_dev_mode
-        formLabel: Showroom Dev Mode
-        openAPIV3Schema:
-          type: boolean
-          default: false
+Help me create a plan to address all important and critical CVEs across rhel-1-{guid}, rhel-2-{guid}, rhel-3-{guid}, and rhel-4-{guid}. Use ONLY the Lightspeed MCP and the RHEL MCP servers when evaluating rhel-1-{guid} and rhel-2-{guid}.  Use ONLY the Satellite MCP AND the RHEL MCP servers when evaluating rhel-3-{guid} and rhel-4-{guid}. Provide the results in an executive report style summary and include benefits of the upgrade and an estimate of the downtime it will take to resolve the issues discovered.
 ----
 
-Propagating bastion credentials::
-When your environment provisions a bastion host, propagate its credentials so Showroom's Wetty terminal can auto-SSH:
-+
-[source,yaml]
+This summary should include a summary of what needs to be changed to secure the system, how long it might take for the resolution, benefits of the change, and a recommended action plan. 
+
+====
+=====
+
+
+=====
+.CIS Level 1 Server Compliance
+[%collapsible]
+====
+
+Infinicorp is NOT currently scanning these systems for regulatory compliance policies like CIS Level 1 Server. + 
+We have a goal to get there by the end of next year for all systems managed by Infinicorp, but we are just starting to figure out how to make that happen. +
+
+These MCP servers might be able to help. +
+
+Start by asking the MCP servers what you already know - are they being scanned for CIS Level 1 Server?
+
+[source, role="execute", subs="attributes"]
 ----
-propagate_provision_data:
-  - name: bastion_public_hostname
-    var: bastion_ansible_host
-  - name: bastion_ssh_user_name
-    var: bastion_ansible_user
-  - name: bastion_ssh_password
-    var: bastion_ansible_ssh_pass
+Are my systems being evaluated for CIS Level 1 Server compliance?
 ----
 
-== Next Steps
+Reviewing the output you should see that the MCP servers conclude that your systems are not currently CIS Level 1 Server compliant.  +
 
-* xref:ocp4-role-reference.adoc[] -- full variable reference for OCP4 deployments.
-* xref:vm-role-reference.adoc[] -- full variable reference for VM deployments.
-* xref:user-data.adoc[] -- how provisioning data reaches your content.
+It may share a couple ideas on how you can get there, but let’s ask for a specific plan. +
+
+Let’s separate this out by your tools again, using Red Hat Lightspeed for the front end and Red Hat Satellite for the backend. +
+
+Let’s start with the front end systems: 
+
+[source, role="execute", subs="attributes"]
+----
+Help me figure out how to enable CIS Level 1 Server compliance for rhel-1-{guid} and rhel-2-{guid}.  Specifically I’d like to use Red Hat Lightspeed to create a policy and scan for compliance.
+----
+
+The output will inform you as to steps to use the compliance service on the Hybrid Cloud Console to create a compliance policy, tailor it, and then scan the system.  +
+Once scanned, there are steps you’ll need to take to remediate any issues that the compliance service finds. 
+
+Since the tools are different for the backend, let’s run a prompt on how to use Satellite for compliance scanning:
+
+[source, role="execute", subs="attributes"]
+----
+Help me figure out how to enable CIS Level 1 Server compliance for rhel-3-{guid} and rhel-4-{guid}.  Specifically I’d like to use Red Hat Satellite to scan for compliance.
+----
+
+Much like the previous prompt, the results will tell you how to use Satellite to perform a scan. 
+
+====
+=====
+
+This completes your review of the security posture of your Infinicorp systems. 
+
+Let’s look more at planning and reporting in the next module.
