@@ -125,6 +125,11 @@ Goose says you’re connected, but to be completely sure, you should run a promp
 How many systems are connected to Red Hat Lightspeed? 
 ----
 
+The output should look similar to:
+
+.Red Hat Lightspeed Inventory Count
+image::lb1305_M2_ConnectedLightspeed.png[link=self, window=blank, width=100%]
+
 NOTE: The number of systems you see in the response will be different from the image above.  This is expected.
 
 The returned result is the number of systems connected to Red Hat Lightspeed.
@@ -145,7 +150,13 @@ Now to check the Satellite MCP server, ask Goose what systems are connected to t
 What hosts are connected to my Satellite? 
 ----
 
-The results will list the servers connected to your Satellite.  
+The results will list the servers connected to your Satellite.  +
+
+The output should look similar to:
+
+.Red Hat Satellite Inventory Count
+image::lb1305_M2_ConnectedSatellite.png[link=self, window=blank, width=100%]
+
 Unlike the Hybrid Cloud Console inventory which is shared, the Satellite inventory is a private environment - you will not see other people’s systems and you will only see your two hosts.
 
 This confirms that Goose is able to communicate with your Satellite server using the Satellite MCP server.
@@ -167,6 +178,11 @@ Check the current CPU load and memory usage for rhel-1-{guid}
 
 This will return basic information about CPU type and utilization along with memory utilization. 
 
+The output should look similar to:
+
+.RHEL CPU/Memory Summary
+image::lb1305_M2_SystemCPU_Mem.png[link=self, window=blank, width=100%]
+
 This confirms that Goose is able to communicate with your RHEL hosts using the RHEL MCP server.
 
 ====
@@ -178,11 +194,15 @@ This confirms that Goose is able to communicate with your RHEL hosts using the R
 [%collapsible]
 ====
 
-The primary interface for this lab will be the mcp host with the goose terminal. 
-You do not need to access the Hybrid Cloud Console or the Satellite UI for any reason in this lab. 
+The primary interface for this lab is the mcp host with the goose terminal. +
 
-However - we know you may want to do so. 
-The credentials are shared at the bottom of each module for convenience. 
+You do not need to access the Hybrid Cloud Console or the Satellite UI for any reason in this lab. +
+However - we know you may want to do so. +
+The credentials are shared at the bottom of this module for convenience. +
+
+NOTE: NONE of the exercises in this lab require logging into the Hybrid Cloud Console or Red Hat Satellite. +
+This is purely optional in the event you wish to explore more. +
+The Hybrid Cloud Console user has read only access and cannot do more than what the MCP calls can do.
 
 **Hybrid Cloud Console**
 
