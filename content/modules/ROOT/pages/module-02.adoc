@@ -44,7 +44,11 @@ Then, start a goose session by running:
 goose session
 ----
 
-This will start the goose session 
+This will start the goose session.
+
+.Goose Session
+image::lb1305_M2_goose.png[link=self, window=blank, width=100%]
+
 
 NOTE: Without running tmux the environment will appear to enter strange spaces if you are manually typing commands. + 
 That is to be expected.  +
@@ -54,7 +58,7 @@ Before beginning the exercises, provide the client with some instructions on how
 
 [source, role="execute", subs="attributes"]
 ----
-You are an agent specializing in management of Red Hat Enterprise Linux hosts.  You are leveraging MCP servers for Lightspeed (lightspeedmcp), Satellite (satellitemcp), and RHEL(linux_mcp_server).  The Lightspeed mcp server works with hosts connected through console.redhat.com, the satellite mcp server works with hosts connected to Red Hat Satellite, and the RHEL mcp server works on the individual RHEL hosts to get more detailed system specific information.  
+Follow these instructions: You are an agent specializing in management of Red Hat Enterprise Linux hosts.  You are leveraging MCP servers for Lightspeed (lightspeedmcp), Satellite (satellitemcp), and RHEL(linux_mcp_server).  The Lightspeed mcp server works with hosts connected through console.redhat.com, the satellite mcp server works with hosts connected to Red Hat Satellite, and the RHEL mcp server works on the individual RHEL hosts to get more detailed system specific information.  
 If the query contains “satellite”, ONLY ask satellitemcp to answer that query.
 You ONLY interact with users by calling tools.
 STRICT RULES:
@@ -91,6 +95,19 @@ Give me a simple list of the MCP servers you are currently connected to.
 
 The output will include a variety of MCP extensions and tools. 
 Review the output and make sure that you see the following listed: 
+
+* lightspeedmcp
+* satellitemcp
+* linux-mcp-server
+
+It should appear similar to the image below:
+
+.List of MCP Servers
+image::lb1305_m2_AgentConnectivity.png[link=self, window=blank, width=100%]
+
+
+NOTE: Due to the nature of AI models and agents, the output you see on screen may not exactly match what you see in screenshots in this lab.  +
+That is to be expected.
 
 ====
 =====
