@@ -22,27 +22,31 @@ Infinicorp would like to leverage model content protocol or MCP servers to allow
 [%collapsible]
 ====
 Infinicorp is providing you with a segmented portion of our environment to experiment with these model context protocol (mcp) servers to help you quickly and easily get information about systems in this environment. +
-This guide will provide you with a series of sample prompts that you can use to evaluate system health, allowing you to see how these components work together through multi-server orchestration to create a "context-aware" infrastructure that simplifies management and accelerates incident response.
-====
-=====
 
+Here is an architecture diagram of the provided environment:
 
-=====
-.The setup:
-[%collapsible]
-====
-In our typical IT environment we might be using cursor or vscode as the “front door”, but in the unclassified environment that you will be working in for testing we have a terminal with goose.  
+.Infinicorp Segmented Architecture Diagram
+image::lb1305_M1_ArchDiagram_v2.png[link=self, window=blank, width=100%]
 
-Your unclassified segmented environment contains the following: 
+Your unclassified segmented environment contains the following which simulates our larger production environment:
 
+Connected to the internet to simulate our customer facing front end systems:
 
-* One (1) preconfigured mcp host
+* Two (2) RHEL hosts each with a PostgreSQL database connected to console.redhat.com
+
+Disconnected from the internet to simulate our backend systems:
+
 * One (1) preconfigured Satellite server
-* Two (2) RHEL hosts connected to console.redhat.com
-* Two (2) RHEL hosts connected to Satellite
+* Two (2) RHEL hosts each with a PostgreSQL database connected to Satellite
 
+The Satellite server is using Red Hat Lightspeed in Satellite, so whiile information about the environment is gathered and analyzed, that data does not leave the Satellite server nor is it sent to the Hybrid Cloud Console. +
+This also means that the Red Hat Lightspeed MCP server cannot return any information about the RHEL hosts connected to Satellite.
 
-Preconfigured for you on the mcp host are the following:
+Connected to all systems as the management layer:
+
+* One (1) preconfigured MCP host
+
+Preconfigured for you on the mcp host are the following MCP servers:
 
 * https://github.com/RedHatInsights/insights-mcp/blob/main/README.md[Red Hat Lightspeed model context protocol (mcp) server^]
 * https://docs.redhat.com/en/documentation/red_hat_satellite/6.18/html/managing_hosts/connecting-ai-applications-to-the-mcp-server-for-satellite[Red Hat Satellite mcp server^]
@@ -51,6 +55,8 @@ Preconfigured for you on the mcp host are the following:
 You will be using *goose* as your local AI agent.  https://block.github.io/goose/[Goose^] is an open source, extensible AI agent. +
 Goose is configured to use LiteLLM as a provider, with qwen3 as a model. +
 This is all pre-configured for you in the segmented network that Infinicorp is providing.  
+
+This guide will provide you with a series of sample prompts that you can use to evaluate system health, allowing you to see how these components work together through multi-server orchestration to create a "context-aware" infrastructure that simplifies management and accelerates incident response.
 
 ====
 =====
