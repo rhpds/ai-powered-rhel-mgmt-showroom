@@ -56,6 +56,14 @@ You will be using *goose* as your local AI agent.  https://block.github.io/goose
 Goose is configured to use LiteLLM as a provider, with qwen3 as a model. +
 This is all pre-configured for you in the segmented network that Infinicorp is providing.  
 
+These MCP servers are not generally available.
+
+* Lightspeed and RHEL MCP servers are Developer preview.  Be sure to read the  https://access.redhat.com/support/offerings/devpreview[Developer Preview - Scope of Support^]
+* Satellite MCP server is Technology Preview. Be sure to read https://access.redhat.com/support/offerings/techpreview[Technology Preview Features - Scope of Support^]
+
+You may be wondering how Developer preview and Technology preview compare - luckily Red Hat has an article that covers that! Read: https://access.redhat.com/articles/6966848[Developer and Technology Previews: How they compare^].
+
+
 This guide will provide you with a series of sample prompts that you can use to evaluate system health, allowing you to see how these components work together through multi-server orchestration to create a "context-aware" infrastructure that simplifies management and accelerates incident response.
 
 ====
