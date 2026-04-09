@@ -15,15 +15,7 @@ This module will get you into goose, validate that the mcp servers are connected
 You will be using the MCP Server Terminal for most of these exercises. 
 You should see that in the showroom on the right pane beside these instructions. 
 
-You’re in the lab bastion or jump host, and you need to ssh into the mcp host which is where you’ll be running your commands.
-In the terminal run the command:
-
-[source, role="execute", subs="attributes"]
-----
-ssh mcp-{guid}
-----
-
-You should now be connected to:
+The terminal is connected to:
 `lab-user@mcp-{guid}` +
 
 NOTE: Hosts in your environment all contain {guid}. In a shared environment like the inventory at console.redhat.com, you might see similar named hosts, but this unique identifier is for your systems.  
