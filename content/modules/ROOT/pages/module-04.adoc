@@ -43,6 +43,12 @@ In this prompt you’ll ask all three MCP servers to contribute to the report to
 I need a report to share with my security operations team to assess the current security posture of our installed servers. Can you provide all the relevant information of my install base (security advisories, vulnerabilities, compliance data, and malware) with the available data from the Lightspeed, Satellite, and RHEL tools?
 ----
 
+.Security Summary
+image::lb1305_M4_Sec_Summary_v2.png[link=self, window=blank, width=100%]
+
+NOTE: The more complex the prompt the less likely it is that you will see the same result in the screenshot. +
+You may not have a table at all.
+
 The output should show you key findings including the number of systems, a summary of operating system versions, any high risk CVEs, any advisor recommendations. +
 It should also include top actions that you should take immediately to help address these issues. +
 
@@ -65,6 +71,12 @@ Lets get a high level overview of CVEs first, then work on a remediation plan.
 Give me a count of all CVEs that affect my environment AND list the top 5 most important to fix based on the criticality of the vulnerability.
 ----
 
+.Security Top 5
+image::lb1305_M4_Sec_Top5.png[link=self, window=blank, width=100%]
+
+NOTE: The information that you see in the response will be different from the image above.  +
+This is expected.
+
 This will give you a total count of CVEs to address across all of your systems. + 
 Then it should give you the top 5 most important with a summary of each. It may even recommend a timeline for fixes. +
 
@@ -79,6 +91,9 @@ Start with the frontend systems:
 Use both the Lightspeed MCP and the RHEL MCP servers to help me create a plan to address important and critical CVEs for rhel-1-{guid} and rhel-2-{guid}. 
 ----
 
+.Front end - Address CVEs
+image::lb1305_M4_Sec_frontend.png[link=self, window=blank, width=100%]
+
 After you finish reviewing the results, repeat with the backend systems. +
 
 [source, role="execute", subs="attributes"]
@@ -86,17 +101,23 @@ After you finish reviewing the results, repeat with the backend systems. +
 Use ONLY the Satellite MCP AND the RHEL MCP servers to help me create a plan to address important and critical CVEs for rhel-3-{guid} and rhel-4-{guid}. 
 ----
 
+.Back end - Address CVEs
+image::lb1305_M4_Sec_backend.png[link=self, window=blank, width=100%]
+
 This helps you see target output from the backend servers connected to your Satellite.  +
 Since they were made from the same base image, the information should be similar, but it may be affected by the Satellite content views as to what fixes are available. +
 
-Now, you should see about a report that is informed by all of the various MCP servers that you have access to.  +
-To help focus it, let’s get even more specifc on the systems and tools used.
+Now, you should see about creating a report that is informed by all of the various MCP servers that you have access to.  +
+To help focus it, let’s get even more specific on the systems and tools used.
 
 
 [source, role="execute", subs="attributes"]
 ----
 Help me create a plan to address all important and critical CVEs across rhel-1-{guid}, rhel-2-{guid}, rhel-3-{guid}, and rhel-4-{guid}. Use ONLY the Lightspeed MCP and the RHEL MCP servers when evaluating rhel-1-{guid} and rhel-2-{guid}.  Use ONLY the Satellite MCP AND the RHEL MCP servers when evaluating rhel-3-{guid} and rhel-4-{guid}. Provide the results in an executive report style summary and include benefits of the upgrade and an estimate of the downtime it will take to resolve the issues discovered.
 ----
+
+.Overall CVE Mitigation Plan
+image::lb1305_M4_CVE_Plan.png[link=self, window=blank, width=100%]
 
 This summary should include a summary of what needs to be changed to secure the system, how long it might take for the resolution, benefits of the change, and a recommended action plan. 
 
@@ -118,8 +139,11 @@ Start by asking the MCP servers what you already know - are they being scanned f
 
 [source, role="execute", subs="attributes"]
 ----
-Are my systems being evaluated for CIS Level 1 Server compliance?
+Are my systems being evaluated for CIS Level 1 Server compliance? Provide a simple response in the key findings format.
 ----
+
+.CIS L1 Server - Key Findings
+image::lb1305_M4_Sec_CISL1_KeyFindings.png[link=self, window=blank, width=100%]
 
 Reviewing the output you should see that the MCP servers conclude that your systems are not currently CIS Level 1 Server compliant.  +
 
@@ -134,6 +158,9 @@ Let’s start with the front end systems:
 Help me figure out how to enable CIS Level 1 Server compliance for rhel-1-{guid} and rhel-2-{guid}.  Specifically I’d like to use Red Hat Lightspeed to create a policy and scan for compliance.
 ----
 
+.CIS L1 Server - Red Hat Lightspeed Compliance
+image::lb1305_M4_Sec_CISL1_Lightspeed.png[link=self, window=blank, width=100%]
+
 The output will inform you as to steps to use the compliance service on the Hybrid Cloud Console to create a compliance policy, tailor it, and then scan the system.  +
 Once scanned, there are steps you’ll need to take to remediate any issues that the compliance service finds. 
 
@@ -143,6 +170,9 @@ Since the tools are different for the backend, let’s run a prompt on how to us
 ----
 Help me figure out how to enable CIS Level 1 Server compliance for rhel-3-{guid} and rhel-4-{guid}.  Specifically I’d like to use Red Hat Satellite to scan for compliance.
 ----
+
+.CIS L1 Server - Red Hat Satellite Compliance
+image::lb1305_M4_Sec_CISL1_Satellite.png[link=self, window=blank, width=100%]
 
 Much like the previous prompt, the results will tell you how to use Satellite to perform a scan. 
 
