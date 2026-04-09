@@ -89,14 +89,14 @@ Give me a simple list of the MCP servers you are currently connected to.
 The output will include a variety of MCP extensions and tools. 
 Review the output and make sure that you see the following listed: 
 
-* lightspeedmcp
-* satellitemcp
-* linux-mcp-server
+* Lightspeed MCP Server
+* Satellite MCP Server
+* RHEL MCP Server
 
 It should appear similar to the image below:
 
 .List of MCP Servers
-image::lb1305_m2_AgentConnectivity.png[link=self, window=blank, width=100%]
+image::lb1305_m2_AgentConnectivity_v2.png[link=self, window=blank, width=100%]
 
 
 NOTE: Due to the nature of AI models and agents, the output you see on screen may not exactly match what you see in screenshots in this lab.  +
