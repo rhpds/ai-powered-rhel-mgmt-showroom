@@ -1,246 +1,105 @@
-= UI Configuration
-:navtitle: UI Configuration
+:imagesdir: ../images
 
-The `ui-config.yml` file in your content repository controls what appears in the right-hand pane of the Showroom interface -- terminal tabs, embedded consoles, external links, and layout settings.
 
-== File Location
+= Environment Planning and Reporting
 
-`ui-config.yml` lives at the root of your content repository (next to `site.yml` and `default-site.yml`).
+Not that you have a good handle on Infinicorp workloads and our security posture, we would appreciate you helping us to plan our rollout for the future. 
 
-== Basic Structure
+Take a look at the versions of RHEL in use and help us identify what we need to do to plan for future upgrades and how we can better improve our default images for performance and security.
 
-[source,yaml]
+NOTE: We will purposely be excluding RHEL 10 from these summaries as we are using the newest approved version which is 10.1.  You will see that reflected in the prompts.
+
+=====
+.Start Goose
+[%collapsible]
+====
+You should already have the MCP Server Terminal open from the previous module. 
+If it isn’t already running, in the MCP terminal window, start a goose session by running: 
+
+[source, role="execute", subs="attributes"]
 ----
----
-type: showroom
-default_width: 30
-persist_url_state: true
-
-tabs:
-  - name: Terminal
-    path: /wetty
-    port: 443
-  - name: OCP Console
-    url: 'https://console-openshift-console.${DOMAIN}'
-  - name: Documentation
-    url: 'https://docs.redhat.com'
+goose session
 ----
 
-== Top-Level Settings
+This will start the goose session 
 
-[cols="1,1,1,3",options="header"]
-|===
-|Key |Type |Default |Description
+====
+=====
 
-|`type`
-|string
-|`showroom`
-|UI type. Set to `showroom` for the standard Showroom layout.
 
-|`default_width`
-|integer
-|`30`
-|Default width (in percentage) of the right-hand pane. The content pane fills the rest.
+=====
+.Check for RHEL OS Version Summary
+[%collapsible]
+====
 
-|`persist_url_state`
-|boolean
-|`true`
-|If `true`, the browser remembers which tab was active and restores it on refresh.
-|===
+The Infinicorp environment strives to use recent versions of RHEL, but as the environment grows and changes over time there are often those older systems sitting in the corner that get neglected. +
+A tool like these MCP servers can help to query the inventory and find hosts in need of some attention. 
 
-== Tabs
+You should focus first on the operating system and see if any are in need of OS level upgrades.
 
-Each entry in the `tabs` list creates a tab in the right-hand pane.
-Tabs can point to internal services (terminal, console) or external URLs.
-
-=== Tab Properties
-
-[cols="1,1,3",options="header"]
-|===
-|Property |Type |Description
-
-|`name`
-|string
-|Display name shown on the tab.
-
-|`url`
-|string
-|Full URL to load in the tab iframe. Use this for external URLs or services on a known hostname. Supports variable substitution (see below).
-
-|`path`
-|string
-|Path relative to the Showroom instance. Used for services running in the same pod or on the same host (e.g. `/wetty` for a terminal).
-
-|`port`
-|integer
-|Port to use when constructing the tab URL from `path`. Typically `443` for HTTPS.
-
-|`secondary_name`
-|string
-|Display name for a stacked secondary panel within the same tab.
-
-|`secondary_path`
-|string
-|Path for the secondary panel.
-
-|`secondary_port`
-|integer
-|Port for the secondary panel.
-|===
-
-=== Variable Substitution
-
-Tab URLs support variable substitution using `$\{VARIABLE}` syntax.
-These are replaced at runtime with values from the deployment:
-
-[cols="1,3",options="header"]
-|===
-|Variable |Description
-
-|`$\{DOMAIN}`
-|The apps domain of the OpenShift cluster (e.g. `apps.cluster.example.com`).
-
-|`$\{GUID}`
-|The unique environment identifier.
-|===
-
-Example:
-
-[source,yaml]
+[source, role="execute", subs="attributes"]
 ----
-tabs:
-  - name: OCP Console
-    url: 'https://console-openshift-console.${DOMAIN}'
-  - name: Grafana
-    url: 'https://grafana-${GUID}.${DOMAIN}'
+Provide a simple summary of the versions of RHEL 9 and older in use and compare to the newest versions, highlighting the number of systems that are approaching end of life. The output should be a simple to read table. Do NOT list hostnames, just a count of systems. Do NOT report on RHEL 10 versions. 
 ----
 
-== Common Tab Patterns
+.RHEL Version Summary
+image::lb1305_m5_SimpleSummary.png[link=self, window=blank, width=100%]
 
-=== Terminal (Wetty)
+NOTE: The numbers and end of life dates that you see in your lab environment will differ from those in the screenshot. +
+This is expected.
 
-A Wetty terminal running as a sidecar container:
+This table should let you know about the number of RHEL systems in your environment that are in need of upgrading including any approaching end of life dates.  
 
-[source,yaml]
+====
+=====
+
+=====
+.Fleet Risk Executive Summary
+[%collapsible]
+====
+
+While the majority of our fleet is using RHEL 10, it looks like we still have quite a few systems that are running RHEL 9. More than we thought! +
+This means that we need to start building these upgrades into our maintenance plans. +
+You should ask the MCP servers to build you an executive summary that you can use to start building a plan and scheduling maintenance windows.
+
+[source, role="execute", subs="attributes"]
 ----
-tabs:
-  - name: Terminal
-    path: /wetty
-    port: 443
+Build me an executive summary of our fleet risk posture. Include which versions retire in the next 6 months, how many systems are affected, and the recommended upgrade path for each group.  Do NOT report on RHEL 10 versions. 
 ----
+.RHEL Executive Risk Summary
+image::lb1305_m5_ExecSummary.png[link=self, window=blank, width=100%]
 
-=== Two Terminals (Stacked)
+NOTE: The numbers and end of life dates that you see in your lab environment will differ from those in the screenshot. +
+This is expected.
 
-Two terminals stacked vertically in one tab:
+The executive recommendations are helpful to take to your leadership team and form the foundation of a plan.  You can adjust this to meet your needs and see if you can fit this into existing maintenance windows, or you may need to plan for some additional upgrade time.
 
-[source,yaml]
+Maybe it might be better to focus on the business critical PostgreSQL databases first? +
+Why don’t you create a PostgreSQL specific plan?
+
+====
+=====
+
+=====
+.PostgreSQL Migration Plan
+[%collapsible]
+====
+
+If you focus on the PostgreSQL specific portion of the environment, you could ask the MCP servers to create a migration plan, perhaps even focusing on not only the RHEL version, but the specific packages that need to be upgraded. +
+A prompt like this might get you the results you need:
+
+[source, role="execute", subs="attributes"]
 ----
-tabs:
-  - name: Terminals
-    path: /wetty
-    port: 443
-    secondary_name: Worker
-    secondary_path: /wetty
-    secondary_port: 443
+Cross-reference our upcoming deprecations with lifecycle data and draft a migration plan for our postgresql systems. Then, generate a report I can share with my manager on packages we need to migrate before the end of year. Do NOT report on RHEL 10 versions. 
 ----
+.PostgreSQL Migration Plan
+image::lb1305_m5_MigrationPlan.png[link=self, window=blank, width=100%]
+NOTE: The more complex the prompt the less likely it is that you will see the same result in the screenshot. You may not have a table at all.
 
-=== OpenShift Console
+The response from the prompt may include a variety of results, possibly including a table like above that will focus on the database versions to upgrade to, other packages that need upgrading, and a migration window. +
+You may even find an order of priority, risk assessment, and recommended actions.
 
-The OpenShift web console in an iframe (requires `ocp4_workload_ocp_console_embed`):
+====
+=====
 
-[source,yaml]
-----
-tabs:
-  - name: OCP Console
-    url: 'https://console-openshift-console.${DOMAIN}'
-----
-
-=== External URL
-
-Any external resource:
-
-[source,yaml]
-----
-tabs:
-  - name: Product Docs
-    url: 'https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform'
-----
-
-NOTE: External sites that set `X-Frame-Options` or `Content-Security-Policy` headers that block iframing will not render in the tab. You will see a blank pane or an error.
-
-== Complete Example
-
-This is the `ui-config.yml` from the https://github.com/rhpds/showroom_template_nookbag[showroom_template_nookbag] template:
-
-[source,yaml]
-----
----
-type: showroom
-default_width: 30
-persist_url_state: true
-
-tabs:
-  - name: OCP Console
-    url: 'https://console-openshift-console.${DOMAIN}'
-  - name: Bastion1
-    path: /wetty
-    port: 443
-  - name: Bastion2
-    path: /wetty
-    port: 443
-    secondary_name: Bastion3
-    secondary_path: /wetty
-    secondary_port: 443
-  - name: Llamastack Docs
-    url: 'https://llama-stack.readthedocs.io/en/latest/'
-----
-
-== Overriding ui-config.yml at Deploy Time
-
-Both roles support overriding `ui-config.yml` without modifying the content repo.
-This is useful for testing different tab layouts or for multi-purpose content repos.
-
-=== OCP4
-
-[source,yaml]
-----
-ocp4_workload_showroom_content_ui_config: |
-  type: showroom
-  default_width: 40
-  tabs:
-    - name: Terminal
-      path: /wetty
-      port: 443
-----
-
-=== VM
-
-[source,yaml]
-----
-showroom_content_ui_config: |
-  type: showroom
-  default_width: 40
-  tabs:
-    - name: Terminal
-      path: /wetty
-      port: 443
-----
-
-These can also be exposed as catalog parameters for testing:
-
-[source,yaml]
-----
-__meta__:
-  catalog:
-    parameters:
-      - name: ocp4_workload_showroom_content_ui_config
-        formLabel: Showroom UI Config Override
-        openAPIV3Schema:
-          type: string
-          default: ''
-----
-
-== Next Steps
-
-* xref:content-repo.adoc[] -- learn about the overall content repo structure.
-* xref:ocp-integration.adoc[] -- set up OCP console embedding for the console tab.
+It looks like you’ve gathered some really good information - continue onto the next module.
