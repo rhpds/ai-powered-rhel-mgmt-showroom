@@ -30,7 +30,7 @@ tmux
 ----
 
 NOTE: When you see yellow blocks like above in this lab environnment, notice that you can copy the command to your clipboard, then easily paste the command into the terminal window. +
-Depending on your computer configureation you may need to use the keyboard command **ctrl-shift-v** to paste
+Depending on your computer configureation you may need to use the keyboard command **ctrl-shift-v** or right click menu to paste.
 
 Then, start a goose session by running: 
 
@@ -153,7 +153,7 @@ The output should look similar to:
 .Red Hat Satellite Inventory Count
 image::lb1305_M2_ConnectedSatellite.png[link=self, window=blank, width=100%]
 
-Unlike the Hybrid Cloud Console inventory which is shared, the Satellite inventory is a private environment - you will not see other people’s systems and you will only see your two hosts.
+Unlike the Hybrid Cloud Console inventory which is shared, the Satellite inventory is a private environment - you will not see other people’s systems and you will only see your hosts.
 
 This confirms that Goose is able to communicate with your Satellite server using the Satellite MCP server.
 
