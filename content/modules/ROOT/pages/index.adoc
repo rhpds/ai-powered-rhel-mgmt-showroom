@@ -35,7 +35,7 @@ Your unclassified segmented environment contains the following which simulates o
 
 Connected to the internet to simulate our customer facing front end systems:
 
-* Two (2) Red Hat Enterprise Linux (RHEL) hosts each with a PostgreSQL database connected to the https://console.redhat.com[Hybrid Cloud Console^]
+* Two (2) Red Hat Enterprise Linux (RHEL) hosts each with a PostgreSQL database connected to the Hybrid Cloud Console.
 
 Disconnected from the internet to simulate our backend systems:
 
