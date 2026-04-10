@@ -3,7 +3,7 @@
 
 = Environment Planning and Reporting
 
-Not that you have a good handle on Infinicorp workloads and our security posture, we would appreciate you helping us to plan our rollout for the future. 
+Now that you have a good handle on Infinicorp workloads and our security posture, we would appreciate your helping us to plan our rollout for the future. 
 
 Take a look at the versions of RHEL in use and help us identify what we need to do to plan for future upgrades and how we can better improve our default images for performance and security.
 
@@ -33,7 +33,7 @@ This will start the goose session
 ====
 
 The Infinicorp environment strives to use recent versions of RHEL, but as the environment grows and changes over time there are often those older systems sitting in the corner that get neglected. +
-A tool like these MCP servers can help to query the inventory and find hosts in need of some attention. 
+Tools like these MCP servers can help to query the inventory and find hosts in need of some attention. 
 
 You should focus first on the operating system and see if any are in need of OS level upgrades.
 
@@ -45,8 +45,7 @@ Provide a simple summary of the versions of RHEL 9 and older in use and compare 
 .RHEL Version Summary
 image::lb1305_m5_SimpleSummary.png[link=self, window=blank, width=100%]
 
-NOTE: The numbers and end of life dates that you see in your lab environment will differ from those in the screenshot. +
-This is expected.
+NOTE: The numbers and end of life dates that you see in your lab environment will differ from those in the screenshot. This is expected.
 
 This table should let you know about the number of RHEL systems in your environment that are in need of upgrading including any approaching end of life dates.  
 
@@ -96,7 +95,7 @@ Cross-reference our upcoming deprecations with lifecycle data and draft a migrat
 image::lb1305_m5_MigrationPlan.png[link=self, window=blank, width=100%]
 NOTE: The more complex the prompt the less likely it is that you will see the same result in the screenshot. You may not have a table at all.
 
-The response from the prompt may include a variety of results, possibly including a table like above that will focus on the database versions to upgrade to, other packages that need upgrading, and a migration window. +
+The response from the prompt may include a variety of results, possibly including a table like above that will focus on which versions of the database versions to upgrade, other packages that need upgrading, and a migration window. +
 You may even find an order of priority, risk assessment, and recommended actions.
 
 ====
