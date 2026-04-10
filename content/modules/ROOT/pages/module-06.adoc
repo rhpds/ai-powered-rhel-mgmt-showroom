@@ -17,7 +17,7 @@ The integration of an AI agent with specialized MCP servers offers significant o
 == Lightspeed MCP Benefits (Hybrid Cloud Console Connected Hosts)
 The Lightspeed MCP primarily interacts with the https://console.redhat.com[Hybrid Cloud Console^] to provide a global view and insights-driven data.
 
-* Proactive Risk Management: Access to Insights data allows the AI agent to prioritize vulnerabilities, stability, and performance issues across the entire public-facing fleet.
+* Proactive Risk Management: Access to Red Hat Lightspeed data allows the AI agent to prioritize vulnerabilities, stability, and performance issues across the entire public-facing fleet.
 * Simplified Inventory & Status: Quickly determine the number of systems, RHEL versions, and overall status without manually navigating the Hybrid Cloud Console UI.
 * Policy and Compliance: Provides the ability to query and plan for security compliance policies like CIS Level 1 Server across the internet-connected environment.
 
