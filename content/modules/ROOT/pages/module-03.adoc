@@ -41,6 +41,9 @@ Why don’t you ask Goose to summarize it?
 This environment is new to me - can you summarize the number of hosts, both connected to Lightspeed AND connected to Satellite, look at the installed packages, and summarize the versions of RHEL, key workloads, and other pertinent information I need to get familiar with this environment?
 ----
 
+.Environment Summary
+image::lb1305_M3_EnvSummary.png[link=self, window=blank, width=100%]
+
 Looking through the generated on screen report, you should see basics on the number of systems in the environment, host distribution by operating system, key workloads, and perhaps even key action items and next steps.
 
 
@@ -62,6 +65,9 @@ In this prompt you’ll ask for a specific tool to give a response, helping you 
 Ask the Satellitemcp, For all hosts that are registered into our company Satellite setup, provide details about subscriptions and installed content, combined with a compact report of the system status (disk usage, memory, cpu)
 ----
 
+.Satellite Summary
+image::lb1305_M3_SatSummary.png[link=self, window=blank, width=100%]
+
 The output may include a summary of each host as well as key observations and recommendations.
 =====
 .Check for PostgreSQL optimizations
@@ -82,6 +88,9 @@ For the front end systems which are rhel-1-{guid} and rhel-2-{guid}, run this pr
 Use both the Lightspeed MCP and the RHEL MCP servers to evaluate the postgresql database on rhel-1-{guid} and rhel-2-{guid} for optimizations and best practices that I can use to improve performance.
 ----
 
+.PostgreSQL Hosts 1-2
+image::lb1305_M3_Postgresql_1-2.png[link=self, window=blank, width=100%]
+
 From the output you should see a number of suggestions including applying the tuned profile, updating system packages, and upgrading the postgresql version.
 
 
@@ -91,6 +100,9 @@ Let’s try a variation of that prompt for the backend systems which are rhel-3-
 ----
 Use both the Satellite MCP and the RHEL MCP servers to evaluate the postgresql database on rhel-3-{guid} and rhel-4-{guid} for optimizations and best practices that I can use to improve performance.
 ----
+
+.PostgreSQL Hosts 3-4
+image::lb1305_M3_Postgresql_3-4.png[link=self, window=blank, width=100%]
 
 From the output you should see a similar list of suggestions including applying the tuned profile, updating system packages, and upgrading the postgresql version.
 
@@ -102,6 +114,9 @@ Let’s combine these into a more complicated prompt and ask for the top 5 thing
 Are there other changes on rhel-1-{guid}, rhel-2-{guid}, rhel-3-{guid}, or rhel-4-{guid} servers that can be done to improve system or database performance? Use Lightspeed, Satellite, and RHEL mcp servers to give a full evaluation and then give me ONLY the top 5 things that I should do on all of these hosts.
 ----
 
+.PostgreSQL Top5
+image::lb1305_M3_Postgresql_Top5.png[link=self, window=blank, width=100%]
+
 This looks like some great information - why don’t you repackage this into an executive report that you can use to request the outage window that you’ll need to resolve this?
 
 [source, role="execute", subs="attributes"]
@@ -109,7 +124,10 @@ This looks like some great information - why don’t you repackage this into an 
 Give me a report of these issues that I can include in an executive report to my management team to request an outage window for necessary improvements and include estimated benefits from the changes.
 ----
 
-You can take this ouput and use it to formulate a ticket or an email to request the outage window that you would need to resolve these issues.
+.PostgreSQL Executive Report
+image::lb1305_M3_Postgresql_ExecRpt.png[link=self, window=blank, width=100%]
+
+You can take this output and use it to formulate a ticket or an email to request the outage window that you would need to resolve these issues.
 
 ====
 =====
