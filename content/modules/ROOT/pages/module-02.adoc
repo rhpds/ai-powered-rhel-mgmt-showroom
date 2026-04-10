@@ -18,7 +18,7 @@ You should see that in the showroom on the right pane beside these instructions.
 The terminal is connected to:
 `lab-user@mcp-{guid}` +
 
-NOTE: Hosts in your environment all contain {guid}. In a shared environment like the inventory at console.redhat.com, you might see similar named hosts, but this unique identifier is for your systems.  
+NOTE: Hosts in your environment all contain {guid}. In a shared environment like the inventory at the https://console.redhat.com[Hybrid Cloud Console^], you might see similar named hosts, but this unique identifier is for your systems.  
 
 Goose also has a graphical user interface (GUI), but you’ll be using the CLI.
 
@@ -28,6 +28,9 @@ In the MCP terminal window, start a tmux session by running:
 ----
 tmux
 ----
+
+NOTE: When you see yellow blocks like above in this lab environnment, notice that you can copy the command to your clipboard, then easily paste the command into the terminal window. +
+Depending on your computer configureation you may need to use the keyboard command **ctrl-shift-v** to paste
 
 Then, start a goose session by running: 
 
