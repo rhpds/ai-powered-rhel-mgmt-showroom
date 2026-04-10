@@ -7,7 +7,8 @@ image::lb1305_M1_Infinicorp_Logo.png[link=self, window=blank, width=100%]
 
 We need your help to update Infinicorp’s management of their Red Hat Enterprise Linux environments.
 
-Infinicorp Robotics Solutions, headquartered here in Atlanta, GA, is a large multi-national corporation focused on electronics manufacturing across a variety of industries.  We got our start selling vending machines for a wide variety of products in Las Vegas, but over time we have branched out into the field of robotics and have a goal of being the leading world wide seller and distributor of autonomous robots.
+Infinicorp Robotics Solutions, headquartered here in Atlanta, GA, is a large multi-national corporation focused on electronics manufacturing across a variety of industries.  +
+We got our start selling vending machines for a wide variety of products in Georgia, but over time we have branched out into the field of robotics and have a goal of being the leading world wide seller and distributor of autonomous robots.
 
 
 Infinicorp has some challenges around the number of management interfaces that we have across our disparate systems.  Our technical staff are used to working in a terminal and don’t want to be bothered to go to a variety of different user interfaces to get critical systems information.
@@ -28,11 +29,13 @@ Here is an architecture diagram of the provided environment:
 .Infinicorp Segmented Architecture Diagram
 image::lb1305_M1_ArchDiagram_v2.png[link=self, window=blank, width=100%]
 
+NOTE: Click this or any other image in this lab to open the image in a new tab.
+
 Your unclassified segmented environment contains the following which simulates our larger production environment:
 
 Connected to the internet to simulate our customer facing front end systems:
 
-* Two (2) RHEL hosts each with a PostgreSQL database connected to console.redhat.com
+* Two (2) Red Hat Enterprise Linux (RHEL) hosts each with a PostgreSQL database connected to the https://console.redhat.com[Hybrid Cloud Console^]
 
 Disconnected from the internet to simulate our backend systems:
 
@@ -50,10 +53,10 @@ Preconfigured for you on the mcp host are the following MCP servers:
 
 * https://github.com/RedHatInsights/insights-mcp/blob/main/README.md[Red Hat Lightspeed model context protocol (mcp) server^]
 * https://docs.redhat.com/en/documentation/red_hat_satellite/6.18/html/managing_hosts/connecting-ai-applications-to-the-mcp-server-for-satellite[Red Hat Satellite mcp server^]
-* https://rhel-lightspeed.github.io/linux-mcp-server/[Red Hat Enterprise Linux mcp server^]
+* https://rhel-lightspeed.github.io/linux-mcp-server/[Red Hat Enterprise Linux (RHEL) mcp server^]
 
 You will be using *goose* as your local AI agent.  https://block.github.io/goose/[Goose^] is an open source, extensible AI agent. +
-Goose is configured to use LiteLLM as a provider, with qwen3 as a model. +
+Goose is configured to use LiteLLM as a provider, with https://github.com/MiniMax-AI/MiniMax-M2[minimax-m2^] as a model. +
 This is all pre-configured for you in the segmented network that Infinicorp is providing.  
 
 These MCP servers are not generally available.
