@@ -69,6 +69,12 @@ You may be wondering how Developer preview and Technology preview compare - luck
 
 This guide will provide you with a series of sample prompts that you can use to evaluate system health, allowing you to see how these components work together through multi-server orchestration to create a "context-aware" infrastructure that simplifies management and accelerates incident response.
 
+The goose configuration itself has a default instruction prompt configured to load whenever a session starts. 
+At the end of each module you will be asked to exit the goose session.
+In the beginning of the next module you will be asked to start a new goose session.
+This clears the context space and helps prevent errors in the environment. 
+This is something you should be doing in your environment as well to be sure a response from a previous prompt isn’t influencing your newest prompt.
+
 ====
 =====
 
