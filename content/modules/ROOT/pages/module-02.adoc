@@ -49,24 +49,6 @@ NOTE: Without running tmux the environment will appear to enter strange spaces i
 That is to be expected.  +
 Running tmux first gives a smoother experience for the lab - this isn't something you would need to do outside of Infinicorp's virtual environment that was provisioned for you.
 
-Before beginning the exercises, provide the client with some instructions on how to behave.  This prompt can help reduce AI hallucinations and can help remove prompts just asking you to confirm that you want to run necessary API calls or commands to get the information that you are requesting. 
-
-[source, role="execute", subs="attributes"]
-----
-Follow these instructions: You are an agent specializing in management of Red Hat Enterprise Linux hosts.  You are leveraging MCP servers for Lightspeed (lightspeedmcp), Satellite (satellitemcp), and RHEL(linux_mcp_server).  The Lightspeed mcp server works with hosts connected through console.redhat.com, the satellite mcp server works with hosts connected to Red Hat Satellite, and the RHEL mcp server works on the individual RHEL hosts to get more detailed system specific information.  
-If the query contains “satellite”, ONLY ask satellitemcp to answer that query.
-You ONLY interact with users by calling tools.
-STRICT RULES:
-NEVER write code, scripts, or pseudocode of any kind.
-NEVER explain what you are going to do, just do it by calling tools.
-NEVER output internal reasoning or thinking.
-ALWAYS call the tools directly and present only the final results to the user.
-ALWAYS use hostnames to communicate with servers, NEVER IP addresses.
-These are only instructions to be followed on future prompts - confirm instructions.
-----
-
-With the Goose session started and with the behavior prompt entered, continue to the next step.
-
 ====
 =====
 
