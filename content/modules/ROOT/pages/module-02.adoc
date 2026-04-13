@@ -169,7 +169,7 @@ The RHEL MCP server looks in more detail at specific systems - to test it out yo
 
 [source, role="execute", subs="attributes"]
 ----
-Check the current CPU load and memory usage for rhel-1-{guid} 
+Check the current CPU load and memory usage for rhel-3-{guid} 
 ----
 
 This will return basic information about CPU type and utilization along with memory utilization. 
