@@ -69,6 +69,10 @@ Ask the Satellitemcp, For all hosts that are registered into our company Satelli
 image::lb1305_M3_SatSummary.png[link=self, window=blank, width=100%]
 
 The output may include a summary of each host as well as key observations and recommendations.
+
+====
+=====
+
 =====
 .Check for PostgreSQL optimizations
 [%collapsible]
