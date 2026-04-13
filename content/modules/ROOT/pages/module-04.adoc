@@ -156,7 +156,7 @@ Let’s start with the front end systems:
 
 [source, role="execute", subs="attributes"]
 ----
-Help me figure out how to enable CIS Level 1 Server compliance for rhel-1-{guid} and rhel-2-{guid}.  Specifically I’d like to use Red Hat Lightspeed to create a policy and scan for compliance.
+Help me figure out how to enable CIS Level 1 Server compliance for rhel-1-{guid} and rhel-2-{guid}. Specifically I’d like to use Red Hat Lightspeed’s compliance service to create a policy and scan for CIS Level 1 Server policy compliance using either MCP or the Lightspeed UI.
 ----
 
 .CIS L1 Server - Red Hat Lightspeed Compliance
