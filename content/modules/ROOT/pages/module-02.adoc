@@ -61,6 +61,7 @@ NEVER write code, scripts, or pseudocode of any kind.
 NEVER explain what you are going to do, just do it by calling tools.
 NEVER output internal reasoning or thinking.
 ALWAYS call the tools directly and present only the final results to the user.
+ALWAYS use hostnames to communicate with servers, NEVER IP addresses.
 These are only instructions to be followed on future prompts - confirm instructions.
 ----
 
