@@ -11,20 +11,21 @@ In this module, let’s dig into security. +
 
 This module will have you querying Goose to check on overall security status and identifying potential problem areas that need to be addressed.
 
-=====
+======
 .Start Goose
 [%collapsible]
 ====
-
-You should already have the MCP Server Terminal open from the previous module. +
+You should already have the MCP Server Terminal open from the previous module. + 
 If it isn’t already running, in the MCP terminal window, start a goose session by running: 
 
-[source,bash,run]
+[source, role="sent-to", subs="attributes"]
 ----
 goose session
 ----
 
 This will start the goose session 
+
+WARNING: Be sure you ended the session from the previous module before starting this new module, otherwise commands may fail due to insufficient context space.  If goose is still running use ctrl+c or /quit to end the session and start a new session as instructed above.
 
 ====
 =====
@@ -178,6 +179,25 @@ Much like the previous prompt, the results will tell you how to use Satellite to
 
 ====
 =====
+
+=====
+.Exit Goose
+[%collapsible]
+====
+The lab environment has limited context available. +
+To help make sure that you have as consistent of a lab experience as possible, you will exit goose at the end of each module and restart it in the next module. +
+In the goose session enter: 
+
+[source, role="sent-to", subs="attributes"]
+----
+/quit
+----
+And hit enter. +
+This will end the goose session and return you to the terminal prompt. 
+====
+=====
+
+
 
 This completes your review of the security posture of your Infinicorp systems. 
 
