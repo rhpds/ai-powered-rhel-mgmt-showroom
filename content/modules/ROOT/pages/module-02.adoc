@@ -185,6 +185,23 @@ This confirms that Goose is able to communicate with your RHEL hosts using the R
 ====
 =====
 
+=====
+.Exit Goose
+[%collapsible]
+====
+The lab environment has limited context available. +
+To help make sure that you have as consistent of a lab experience as possible, you will exit goose at the end of each module and restart it in the next module. +
+In the goose session enter: 
+
+[source, role="sent-to", subs="attributes"]
+----
+/quit
+----
+And hit enter. +
+This will end the goose session and return you to the terminal prompt. 
+====
+=====
+
 
 =====
 .Access to Hybrid Cloud Console and Satellite UI
