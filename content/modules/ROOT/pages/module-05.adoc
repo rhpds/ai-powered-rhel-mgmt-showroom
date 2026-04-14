@@ -41,7 +41,7 @@ You should focus first on the operating system and see if any are in need of OS 
 
 [source, role="execute", subs="attributes"]
 ----
-Provide a simple summary of the versions of RHEL 9 and older in use and compare to the newest versions, highlighting the number of systems that are approaching end of life. The output should be a simple to read table. Do NOT list hostnames, just a count of systems. Do NOT report on RHEL 10 versions. 
+Provide a simple summary of the versions of RHEL 9 and older in use and compare to the newest versions, highlighting the number of systems that are approaching end of life. The output should be a simple to read table. Do NOT list hostnames, just a count of systems. Do NOT report on RHEL 10 versions. Use the Lightspeed planning service to get this information.
 ----
 
 .RHEL Version Summary
