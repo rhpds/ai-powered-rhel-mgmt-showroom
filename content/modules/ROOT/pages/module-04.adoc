@@ -11,7 +11,7 @@ In this module, let’s dig into security. +
 
 This module will have you querying Goose to check on overall security status and identifying potential problem areas that need to be addressed.
 
-======
+=====
 .Start Goose
 [%collapsible]
 ====
