@@ -11,22 +11,28 @@ content:
 
 ui:
   bundle:
-    url: https://github.com/rhpds/rhdp_showroom_theme/releases/download/rh-summit-2025/ui-bundle.zip
+    # rh-one-2025 | rh-summit-2025
+    url: https://github.com/rhpds/rhdp_showroom_theme/releases/download/rh-one-2025/ui-bundle.zip
     snapshot: true
   supplemental_files:
     - path: ./content/supplemental-ui
     - path: ./content/lib
 
+runtime:
+  cache_dir: ./.cache/antora
+
 antora:
   extensions:
     - '@sntke/antora-mermaid-extension'
+    # inject-buttons.js: inlines buttons.js + site-extra.css into every page.
+    # Required for send-to terminal buttons.
+    - require: ./content/lib/inject-buttons.js
 
 asciidoc:
   attributes:
     experimental: true
     page-pagination: true
     showroom-collection-version: v1.5.6
-
 
 output:
   dir: ./www

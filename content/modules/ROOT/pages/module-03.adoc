@@ -1,5 +1,4 @@
 :imagesdir: ../images
-include::common/send-to.adoc[]
 
 = Workload Review 
 
