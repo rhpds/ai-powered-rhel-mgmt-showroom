@@ -15,14 +15,14 @@ This module will have you querying Goose to check on this business critical work
 [%collapsible]
 ====
 You should already have the MCP Server Terminal open from the previous module. + 
-If it isn’t already running, in the MCP terminal window, start a goose session by running: 
+If it isn’t already running, in the MCP terminal window, start a Goose session by running: 
 
 [source, role="sent-to", subs="attributes"]
 ----
 goose session
 ----
 
-This will start the goose session 
+This will start the Goose session 
 
 WARNING: Be sure you ended the session from the previous module before starting this new module, otherwise commands may fail due to insufficient context space.  If goose is still running use ctrl+c or /quit to end the session and start a new session as instructed above.
 
@@ -83,7 +83,7 @@ The output may include a summary of each host as well as key observations and re
 While you’re working through the environment summary an urgent message has arrived from the workloads team.  +
 The frontend webserver is not working properly - the httpd service on rhel-2-{guid} is not starting and you need to get this up and running ASAP! +
 
-Use the mcp servers to see if it can identify what is going on.
+Use the MCP servers to see if it can identify what is going on.
 
 [source, role="execute", subs="attributes"]
 ----
@@ -98,7 +98,7 @@ This used the RHEL MCP’s guarded execution feature to identify an issue, ident
 As mentioned in the lab description page, this is a feature that we enabled in the configuration file of Goose.  +
 The prompt that we have auto loading when Goose starts also has it suppressing confirmation of running tasks or commands.  +
 If you did not want to enable this feature, that is an option.  +
-If you want goose to prompt you before running a command or a script, that is also an option.
+If you want Goose to prompt you before running a command or a script, that is also an option.
 
 ====
 =====
