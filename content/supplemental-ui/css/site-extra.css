@@ -35,10 +35,9 @@ video {
 }
 
 /* wrap long prompts in execute blocks so they don't overflow horizontally */
-.doc .listingblock.execute pre,
-.doc .listingblock.execute pre code,
-.doc .listingblock pre.execute,
-.doc .listingblock pre.execute code {
+/* role="execute" renders as pre.send-to in the Showroom theme */
+.doc .listingblock pre.send-to,
+.doc .listingblock pre.send-to code {
     white-space: pre-wrap !important;
     word-break: break-word !important;
     overflow-x: visible !important;
