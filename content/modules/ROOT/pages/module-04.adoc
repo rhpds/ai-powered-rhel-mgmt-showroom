@@ -50,7 +50,7 @@ image::lb1305_M4_Sec_Summary_v2.png[link=self, window=blank, width=100%]
 NOTE: The more complex the prompt the less likely it is that you will see the same result in the screenshot. +
 You may not have a table at all.
 
-The output should show you key findings including the number of systems, a summary of operating system versions, any high risk CVEs, any advisor recommendations. +
+The output should show you key findings including the number of systems, a summary of operating system versions, any high risk Common Vulnerabilities and Exposures (CVEs), any advisor recommendations. +
 It should also include top actions that you should take immediately to help address these issues. +
 
 Since you specified a report in your prompt, it should be in a format that you could copy and paste into an email or ticketing system to help you justify any maintenance windows that you might need to schedule for this work.
