@@ -1,6 +1,6 @@
 :imagesdir: ../images
 
-= Verifying connectivity to the MCP Agents 
+= Verifying connectivity to the MCP Servers 
 
 To start out your experience with Infinicorp, we need to validate that the setup is working properly.
 
