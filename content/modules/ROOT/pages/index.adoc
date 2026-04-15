@@ -43,7 +43,7 @@ Disconnected from the internet to simulate our backend systems:
 * Two (2) RHEL hosts each with a PostgreSQL database connected to Satellite
 
 The Satellite server is using Red Hat Lightspeed in Satellite, so while information about the environment is gathered and analyzed, that data does not leave the Satellite server nor is it sent to the Hybrid Cloud Console. +
-This also means that the Red Hat Lightspeed MCP server cannot return any information about the RHEL hosts connected to Satellite.
+This also means that the MCP server for Red Hat Lightspeed  cannot return any information about the RHEL hosts connected to Satellite.
 
 Connected to all systems as the management layer:
 
@@ -51,9 +51,9 @@ Connected to all systems as the management layer:
 
 Preconfigured for you on the MCP host are the following MCP servers:
 
-* https://github.com/RedHatInsights/insights-mcp/blob/main/README.md[Red Hat Lightspeed mcp server^]
-* https://docs.redhat.com/en/documentation/red_hat_satellite/6.18/html/managing_hosts/connecting-ai-applications-to-the-mcp-server-for-satellite[Red Hat Satellite mcp server^]
-* https://rhel-lightspeed.github.io/linux-mcp-server/[Red Hat Enterprise Linux (RHEL) mcp server^]
+* https://github.com/RedHatInsights/insights-mcp/blob/main/README.md[MCP server for Red Hat Lightspeed^]
+* https://docs.redhat.com/en/documentation/red_hat_satellite/6.18/html/managing_hosts/connecting-ai-applications-to-the-mcp-server-for-satellite[MCP server for Red Hat Satellite ^]
+* https://rhel-lightspeed.github.io/linux-mcp-server/[MCP server for Red Hat Enterprise Linux (RHEL) ^]
 
 You will be using *Goose* as your local AI agent.  https://block.github.io/goose/[Goose^] is an open source, extensible AI agent. +
 Goose is configured to use LiteLLM as a provider, with https://github.com/MiniMax-AI/MiniMax-M2[minimax-m2^] as a model. +
@@ -61,8 +61,8 @@ This is all pre-configured for you in the segmented network that Infinicorp is p
 
 These MCP servers are not generally available:
 
-* Red Hat Lightspeed and RHEL MCP servers are Developer Preview.  Be sure to read the  https://access.redhat.com/support/offerings/devpreview[Developer Preview - Scope of Support^]
-* Satellite MCP server is Technology Preview. Be sure to read https://access.redhat.com/support/offerings/techpreview[Technology Preview Features - Scope of Support^]
+* MCP servers for Red Hat Lightspeed and RHEL are Developer Preview.  Be sure to read the  https://access.redhat.com/support/offerings/devpreview[Developer Preview - Scope of Support^]
+* MCP server for Red Hat Satellite is Technology Preview. Be sure to read https://access.redhat.com/support/offerings/techpreview[Technology Preview Features - Scope of Support^]
 
 You may be wondering how Developer Preview and Technology Preview compare - luckily Red Hat has an article that covers that! Read: https://access.redhat.com/articles/6966848[Developer and Technology Previews: How they compare^].
 
