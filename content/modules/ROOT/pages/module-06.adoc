@@ -31,17 +31,17 @@ WARNING: Be sure you ended the session from the previous module before starting 
 [%collapsible]
 ====
 
-== Guarded Command Execution
-
-Guarded Command Execution is an experimental feature of the MCP server for RHEL developer preview. When it is enabled (by setting *LINUX_MCP_TOOLSET* to *run_script* or *both*), the MCP server for RHEL exposes additional tools that allow models to provide a script to run on the target system, instead of simply calling fixed, read-only tools.
+Guarded Command Execution is an experimental feature of the MCP server for RHEL developer preview. When it is enabled, the MCP server for RHEL exposes additional tools that allow models to provide a script to run on the target system, instead of simply calling fixed, read-only tools.
 
 This greatly increases the functionality of the MCP server for RHEL. It allows models to use all their knowledge of Linux operating systems to diagnose and even fix problems on the target system.  Guarded command execution can help equip AI tools to dynamically investigate and troubleshoot issues on individual systems. However, it is not intended for infrastructure remediation or changes; we recommend using Ansible Automation Platform to deterministically apply validated changes across your enterprise RHEL environment.
 
 However, along with the increased functionality, comes a greater risk of "prompt injection" attacks. In a prompt injection attack, an attacker disguises commands in data that the model reads, and tricks the model into doing something that the user doesn't intend. To help control these risks, when Guarded Command Execution is enabled, there are multiple levels of guardrails enabled:
 
 * Gatekeeper model: A separate model called the Gatekeeper does an initial check of the command to make sure that it looks OK and matches the provided description.
-* Human in the loop: commands that modify the system are flagged for human approval. The human can review the description and optionally the exact command.  If using a MCP client that supports MCP Apps, a custom approval UI will be displayed.  In the lab environment we are using the command line version of Goose, which doesn’t support MCP Apps, so it is highly recommended to use the Goose *approve* mode and always manually review and approve *run_script_with_confirmation* tool calls.  
-* Sandboxing: When possible, the command is run in an OS-level sandbox with limited permissions. (note: sandboxing is currently rudimentary.)
+* Human in the loop: commands that modify the system are flagged for human approval. The human can review the description and optionally the exact command.  +
+If using a MCP client that supports MCP Apps, a custom approval UI will be displayed.  +
+In the lab environment we are using the command line version of Goose, which doesn’t support MCP Apps, so it is highly recommended to use the Goose *approve* mode and always manually review and approve *run_script_with_confirmation* tool calls.  
+* Sandboxing: When possible, the command is run in an OS-level sandbox with limited permissions.
 
 
 Now that you’re caught up on this feature, you should try it out.
@@ -86,7 +86,7 @@ In the Goose terminal type:
 /mode approve
 ----
 
-This will put Goose into approve mode. 
+Then press enter.  This will put Goose into approve mode. 
 
 Now you are ready to use the MCP server for RHEL with Guarded Command Execution.
 
