@@ -33,14 +33,14 @@ tmux
 NOTE: When you see yellow blocks like above in this lab environment, notice that you can copy the command to your clipboard, then easily paste the command into the terminal window. +
 Depending on your computer configuration you may need to use the keyboard command **ctrl-shift-v** or right click menu to paste.
 
-Then, start a goose session by running: 
+Then, start a Goose session by running: 
 
 [source, role="execute", subs="attributes"]
 ----
 goose session
 ----
 
-This will start the goose session.
+This will start the Goose session.
 
 .Goose Session
 image::lb1305_M2_goose.png[link=self, window=blank, width=100%]
@@ -66,7 +66,7 @@ As a reminder, the three MCP servers are:
 * Red Hat Satellite MCP
 * Red Hat Enterprise Linux MCP
 
-Make sure you are in the goose session, and run the following prompt:
+Make sure you are in the Goose session, and run the following prompt:
 
 [source, role="execute", subs="attributes"]
 ----
@@ -173,15 +173,15 @@ This confirms that Goose is able to communicate with your RHEL hosts using the R
 [%collapsible]
 ====
 The lab environment has limited context available. +
-To help make sure that you have as consistent of a lab experience as possible, you will exit goose at the end of each module and restart it in the next module. +
-In the goose session enter: 
+To help make sure that you have as consistent of a lab experience as possible, you will exit Goose at the end of each module and restart it in the next module. +
+In the Goose session enter: 
 
 [source, role="sent-to", subs="attributes"]
 ----
 /quit
 ----
 And hit enter. +
-This will end the goose session and return you to the terminal prompt. 
+This will end the Goose session and return you to the terminal prompt. 
 ====
 =====
 
@@ -191,7 +191,7 @@ This will end the goose session and return you to the terminal prompt.
 [%collapsible]
 ====
 
-The primary interface for this lab is the mcp host with the goose terminal. +
+The primary interface for this lab is the mcp host with the Goose terminal. +
 
 You do not need to access the Hybrid Cloud Console or the Satellite UI for any reason in this lab. +
 However - we know you may want to do so. +
