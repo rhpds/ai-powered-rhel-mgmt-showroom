@@ -1,46 +1,162 @@
 :imagesdir: ../images
 
-= Recap
+Infinicorp is experimenting with a new feature of the MCP server for Red Hat Enterprise Linux (RHEL).
 
-Infinicorp thanks you for your efforts in updating Infinicorp’s management of our Red Hat Enterprise Linux environments.
+This feature is called guarded command execution. 
+First, learn a little more about this feature, then Infinicorp will have you run two exercises with this so you can get some experience with it. 
 
-Today you utilized three specialized MCP servers in your efforts:
 
-* https://github.com/RedHatInsights/insights-mcp/blob/main/README.md[MCP server for Red Hat Lightspeed ^]: For RHEL hosts connected to the Hybrid Cloud Console.
-* https://docs.redhat.com/en/documentation/red_hat_satellite/6.18/html/managing_hosts/connecting-ai-applications-to-the-mcp-server-for-satellite[MCP server for Red Hat Satellite ^]: For RHEL hosts connected to a Red Hat Satellite server.
-* https://rhel-lightspeed.github.io/linux-mcp-server/[MCP server for Red Hat Enterprise Linux (RHEL) ^]: For deep, system-specific diagnostics.
-We hope that the time that you spent has been mutually beneficial and you learned some of the capabilities of these MCP servers that you can take back to your own organizations.
+=====
+.Start Goose
+[%collapsible]
+====
+You should already have the MCP Server Terminal open from the previous module. + 
+If it isn’t already running, in the MCP terminal window, start a goose session by running: 
 
-The integration of an AI agent with specialized MCP servers offers significant organizational benefits by transforming system management from a reactive, multi-tool process to a proactive, natural-language workflow.
+[source, role="sent-to", subs="attributes"]
+----
+goose session
+----
 
-== MCP server for Red Hat Lightspeed Benefits (Hybrid Cloud Console Connected Hosts)
+This will start the goose session 
 
-The MCP server for Red Hat Lightspeed primarily interacts with the https://console.redhat.com[Hybrid Cloud Console^] to provide a global view and insights-driven data.
+WARNING: Be sure you ended the session from the previous module before starting this new module, otherwise commands may fail due to insufficient context space.  If goose is still running use ctrl+c or /quit to end the session and start a new session as instructed above.
 
-* Proactive Risk Management: Access to Insights data allows the AI agent to prioritize vulnerabilities, stability, and performance issues across the entire public-facing fleet.
-* Simplified Inventory & Status: Quickly determine the number of systems, RHEL versions, and overall status without manually navigating the Hybrid Cloud Console UI.
-* Policy and Compliance: Provides the ability to query and plan for security compliance policies like CIS Level 1 Server across the internet-connected environment.
+====
+=====
 
-== MCP server for Red Hat Satellite Benefits 
 
-The MCP server for Red Hat Satellite provides the same level of AI-driven analysis for air-gapped or privately managed systems, ensuring security and consistency across the entire organization.
+=====
+.Guarded Command Execution
+[%collapsible]
+====
 
-* Unified Management View: Allows the AI agent to manage and assess the health of systems using the same interface and language as the connected ones.
-* Security for Offline Environments: Enables the creation of vulnerability and remediation plans based on available content in the Satellite server's repositories.
-* Data Sovereignty: Maintains all host data and AI analysis within the private network, addressing security or regulatory requirements for sensitive backend systems.
+== Guarded Command Execution
 
-== MCP server for RHEL Benefits
+Guarded Command Execution is an experimental feature of the MCP server for RHEL developer preview. When it is enabled (by setting *LINUX_MCP_TOOLSET* to *run_script* or *both*), the MCP server for RHEL exposes additional tools that allow models to provide a script to run on the target system, instead of simply calling fixed, read-only tools.
 
-The MCP server for RHEL allows for deep, on-host inspection, which is critical for real-time troubleshooting and validation.
+This greatly increases the functionality of the MCP server for RHEL. It allows models to use all their knowledge of Linux operating systems to diagnose and even fix problems on the target system.  Guarded command execution can help equip AI tools to dynamically investigate and troubleshoot issues on individual systems. However, it is not intended for infrastructure remediation or changes; we recommend using Ansible Automation Platform to deterministically apply validated changes across your enterprise RHEL environment.
 
-* Accelerated Troubleshooting: Quickly checks real-time metrics (CPU load, memory usage) and logs for specific hosts using natural language, accelerating incident response.
-* Pre-Patch Validation: Ensures a host is stable before applying patches or upgrades by analyzing current resource utilization and service status.
-* Context-Aware Resolution: Provides the necessary system-level data to inform the multi-server orchestrating AI agent, leading to more accurate and specific remediation plans.
+However, along with the increased functionality, comes a greater risk of "prompt injection" attacks. In a prompt injection attack, an attacker disguises commands in data that the model reads, and tricks the model into doing something that the user doesn't intend. To help control these risks, when Guarded Command Execution is enabled, there are multiple levels of guardrails enabled:
 
-== Time left in the lab?
+* Gatekeeper model: A separate model called the Gatekeeper does an initial check of the command to make sure that it looks OK and matches the provided description.
+* Human in the loop: commands that modify the system are flagged for human approval. The human can review the description and optionally the exact command.  If using a MCP client that supports MCP Apps, a custom approval UI will be displayed.  In the lab environment we are using the command line version of Goose, which doesn’t support MCP Apps, so it is highly recommended to use the Goose *approve* mode and always manually review and approve *run_script_with_confirmation* tool calls.  
+* Sandboxing: When possible, the command is run in an OS-level sandbox with limited permissions. (note: sandboxing is currently rudimentary.)
 
-Feel free to use the remaining time in this lab to ask any additional queries of the MCP servers or interact with the actual people staffing the lab who might know some interesting things about all of these tools and how they work.
 
-=== Please complete your lab survey and let us know about your experience!
+Now that you’re caught up on this feature, you should try it out.
 
-Thank you for your time.
+====
+=====
+
+=====
+.Start Goose
+[%collapsible]
+====
+You should already have the MCP Server Terminal open from the previous module. 
+If it isn’t already running, in the MCP terminal window, start a goose session by running: 
+
+[source, role="execute", subs="attributes"]
+----
+goose session
+----
+
+This will start the goose session 
+
+====
+=====
+
+
+=====
+.Enter Goose approve mode
+[%collapsible]
+====
+
+Throughout the exercises that you have been performing for Infinicorp, the environment was in auto approve mode, meaning that any requests that you made were performed without prompting you for permission.
+
+Moving to approve mode means that any calls that don’t already have permission will pause activity in progress and prompt you for permission.
+
+To keep this from being too noisy, Infinicorp has a permissions file already in place to allow the majority of the functions of the MCP server for RHEL to work without prompting.  +
+That same permissions file instructs the MCP server to ask before running *rhel-mcp-server__run_script_with_confirmation*. 
+
+In the Goose terminal type:
+
+[source, role="execute", subs="attributes"]
+----
+/mode approve
+----
+
+This will put Goose into approve mode. 
+
+Now you are ready to use the MCP server for RHEL with Guarded Command Execution.
+
+
+====
+=====
+
+=====
+.Troubleshoot reported workload issues
+[%collapsible]
+====
+
+While you’re working through the environment summary an urgent message has arrived from the workloads team.  +
+The frontend webserver is not working properly - the httpd service on rhel-2-{guid} is not starting and you need to get this up and running ASAP! +
+
+Use the MCP servers to see if it can identify what is going on.
+
+[source, role="execute", subs="attributes"]
+----
+The httpd.service failed on rhel-2-{guid} - can you help identify the issue and fix it for me?
+----
+
+You should be prompted if you want to allow a script to run that can correct the typo that was found from “LListen” to the correct spelling of “Listen”.
+
+Select the option to allow the tool to be called once.
+
+.Run fix typo script
+image::lb1305_M6_listen_typo_v2.png[link=self, window=blank, width=100%]
+
+After approving you may be prompted to allow a script to run again. In this example the script is fixing the typo and restarting the service. Since it is a different script, and since you only gave permission for the tool to be run a single time, you are prompted again.
+
+Select the option to allow the tool to be called once.
+
+.Run fix typo and restart service script
+image::lb1305_M6_listen_typo_restart.png[link=self, window=blank, width=100%]
+
+It is possible you may receive additional requests to approve the tool running.  Review what the script is asking to run, and allow the tool to be called once so that you can see each step.
+
+Additional scripts may be requested for reading in data, verification of the fix or perhaps because of communication issues.
+
+Once all of the scripts have been run, the typo is fixed and the service is running.
+
+.Issue fixed with httpd service
+image::lb1305_M6_listen_typo_fixed.png[link=self, window=blank, width=100%]
+
+
+This used the RHEL MCP’s guarded execution feature to identify an issue, identify a simple typo in a configuration file, assembled a script that would fix the typo, validated if the script was safe to run and if the script would have any unsafe impact on the server, ran the script, and validated that the service was brought up successfully.
+
+This was a good example of a script that was successfully run to fix a simple issue. 
+
+====
+=====
+
+
+=====
+.Exit Goose
+[%collapsible]
+====
+The lab environment has limited context available. +
+To help make sure that you have as consistent of a lab experience as possible, you will exit Goose at the end of each module and restart it in the next module. +
+In the Goose session enter: 
+
+[source, role="sent-to", subs="attributes"]
+----
+/quit
+----
+And hit enter. +
+This will end the Goose session and return you to the terminal prompt. 
+====
+=====
+
+That finished up the various exercises that Infinicorp had for you. 
+Continue onto the Recap module.
