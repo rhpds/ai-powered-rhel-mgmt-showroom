@@ -1,7 +1,7 @@
 :imagesdir: ../images
 
 
-= Environment Planning and Reporting
+= Environment Planning
 
 Now that you have a good handle on Infinicorp workloads and our security posture, we would appreciate your helping us to plan our rollout for the future. 
 
