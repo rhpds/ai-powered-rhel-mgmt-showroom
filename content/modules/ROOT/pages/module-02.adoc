@@ -1,9 +1,10 @@
 :imagesdir: ../images
 
 = Verifying connectivity to the MCP Agents 
+
 To start out your experience with Infinicorp, we need to validate that the setup is working properly.
 
-This module will get you into goose, validate that the mcp servers are connected, and run a couple of test prompts.
+This module will get you into Goose, validate that the MCP servers are connected, and run a couple of test prompts.
 
 *Expand a section below to complete the tasks in that section.* +  
 *Please complete each section in order.*
@@ -20,7 +21,7 @@ The terminal is connected to:
 
 NOTE: Hosts in your environment all contain {guid}. In a shared environment like the inventory at the https://console.redhat.com[Hybrid Cloud Console^], you might see similarly named hosts, but this unique identifier is for your systems.  
 
-Goose also has a graphical user interface (GUI), but you’ll be using the CLI.
+Goose also has a graphical user interface (GUI), but you’ll be using the command line interface (CLI).
 
 In the MCP terminal window, start a tmux session by running: 
 
