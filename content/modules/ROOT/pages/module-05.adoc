@@ -108,7 +108,7 @@ You may even find an order of priority, risk assessment, and recommended actions
 [%collapsible]
 ====
 The lab environment has limited context available. +
-To help make sure that you have as consistent of a lab experience as possible, you will exit goose at the end of each module and restart it in the next module. +
+To help make sure that you have as consistent of a lab experience as possible, you will exit Goose at the end of each module and restart it in the next module. +
 In the Goose session enter: 
 
 [source, role="sent-to", subs="attributes"]
