@@ -36,7 +36,10 @@ video {
 
 /* wrap long prompts in execute blocks so they don't overflow horizontally */
 .doc .listingblock.execute pre,
-.doc .listingblock pre.execute {
-    white-space: pre-wrap;
-    word-break: break-word;
+.doc .listingblock.execute pre code,
+.doc .listingblock pre.execute,
+.doc .listingblock pre.execute code {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    overflow-x: visible !important;
 }
