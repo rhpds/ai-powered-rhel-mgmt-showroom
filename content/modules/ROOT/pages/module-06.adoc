@@ -1,35 +1,37 @@
 :imagesdir: ../images
+
 = Recap
 
 Infinicorp thanks you for your efforts in updating Infinicorp’s management of our Red Hat Enterprise Linux environments.
 
 Today you utilized three specialized MCP servers in your efforts:
 
-* https://github.com/RedHatInsights/insights-mcp/blob/main/README.md[Red Hat Lightspeed MCP^]: For RHEL hosts connected to the Hybrid Cloud Console.
-* https://docs.redhat.com/en/documentation/red_hat_satellite/6.18/html/managing_hosts/connecting-ai-applications-to-the-mcp-server-for-satellite[Red Hat Satellite MCP^]: For RHEL hosts connected to a Red Hat Satellite server.
-* https://rhel-lightspeed.github.io/linux-mcp-server/[Red Hat Enterprise Linux (RHEL) MCP^]: For deep, system-specific diagnostics.
-
+* https://github.com/RedHatInsights/insights-mcp/blob/main/README.md[MCP server for Red Hat Lightspeed ^]: For RHEL hosts connected to the Hybrid Cloud Console.
+* https://docs.redhat.com/en/documentation/red_hat_satellite/6.18/html/managing_hosts/connecting-ai-applications-to-the-mcp-server-for-satellite[MCP server for Red Hat Satellite ^]: For RHEL hosts connected to a Red Hat Satellite server.
+* https://rhel-lightspeed.github.io/linux-mcp-server/[MCP server for Red Hat Enterprise Linux (RHEL) ^]: For deep, system-specific diagnostics.
 We hope that the time that you spent has been mutually beneficial and you learned some of the capabilities of these MCP servers that you can take back to your own organizations.
 
 The integration of an AI agent with specialized MCP servers offers significant organizational benefits by transforming system management from a reactive, multi-tool process to a proactive, natural-language workflow.
 
+== MCP server for Red Hat Lightspeed Benefits (Hybrid Cloud Console Connected Hosts)
 
-== Lightspeed MCP Benefits (Hybrid Cloud Console Connected Hosts)
-The Lightspeed MCP primarily interacts with the https://console.redhat.com[Hybrid Cloud Console^] to provide a global view and insights-driven data.
+The MCP server for Red Hat Lightspeed primarily interacts with the https://console.redhat.com[Hybrid Cloud Console^] to provide a global view and insights-driven data.
 
-* Proactive Risk Management: Access to Red Hat Lightspeed data allows the AI agent to prioritize vulnerabilities, stability, and performance issues across the entire public-facing fleet.
+* Proactive Risk Management: Access to Insights data allows the AI agent to prioritize vulnerabilities, stability, and performance issues across the entire public-facing fleet.
 * Simplified Inventory & Status: Quickly determine the number of systems, RHEL versions, and overall status without manually navigating the Hybrid Cloud Console UI.
 * Policy and Compliance: Provides the ability to query and plan for security compliance policies like CIS Level 1 Server across the internet-connected environment.
 
-== Satellite MCP Benefits 
-The Satellite MCP provides the same level of AI-driven analysis for air-gapped or privately managed systems, ensuring security and consistency across the entire organization.
+== MCP server for Red Hat Satellite Benefits 
+
+The MCP server for Red Hat Satellite provides the same level of AI-driven analysis for air-gapped or privately managed systems, ensuring security and consistency across the entire organization.
 
 * Unified Management View: Allows the AI agent to manage and assess the health of systems using the same interface and language as the connected ones.
 * Security for Offline Environments: Enables the creation of vulnerability and remediation plans based on available content in the Satellite server's repositories.
 * Data Sovereignty: Maintains all host data and AI analysis within the private network, addressing security or regulatory requirements for sensitive backend systems.
 
-== RHEL MCP Benefits
-The RHEL MCP allows for deep, on-host inspection, which is critical for real-time troubleshooting and validation.
+== MCP server for RHEL Benefits
+
+The MCP server for RHEL allows for deep, on-host inspection, which is critical for real-time troubleshooting and validation.
 
 * Accelerated Troubleshooting: Quickly checks real-time metrics (CPU load, memory usage) and logs for specific hosts using natural language, accelerating incident response.
 * Pre-Patch Validation: Ensures a host is stable before applying patches or upgrades by analyzing current resource utilization and service status.
