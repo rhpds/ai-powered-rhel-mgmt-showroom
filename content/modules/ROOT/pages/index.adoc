@@ -5,7 +5,7 @@
 .Infinicorp Logo
 image::lb1305_M1_Infinicorp_Logo.png[link=self, window=blank, width=100%]
 
-We need your help to update Infinicorp’s management of their Red Hat Enterprise Linux environments.
+We need your help to update Infinicorp’s management of their Red Hat Enterprise Linux (RHEL) environments.
 
 Infinicorp Robotics Solutions, headquartered here in Atlanta, GA, is a large multi-national corporation focused on electronics manufacturing across a variety of industries.  +
 We got our start selling vending machines for a wide variety of products in Georgia, but over time we have branched out into the field of robotics and have a goal of being the leading world wide seller and distributor of autonomous robots.
@@ -13,7 +13,7 @@ We got our start selling vending machines for a wide variety of products in Geor
 
 Infinicorp has some challenges around the number of management interfaces that we have across our disparate systems.  Our technical staff are used to working in a terminal and don’t want to be bothered to go to a variety of different user interfaces to get critical systems information.
 
-Infinicorp would like to leverage model content protocol or MCP servers to allow these administrators the options to use natural language to ask questions and get information from the terminal interfaces where they are already working. 
+Infinicorp would like to leverage Model Context Protocol or MCP servers to allow these administrators the options to use natural language to ask questions and get information from the terminal interfaces where they are already working. 
 
 *Expand a section below to complete the tasks in that section.* +  
 *Please complete each section in order.*
@@ -22,7 +22,7 @@ Infinicorp would like to leverage model content protocol or MCP servers to allow
 .Where we need your help:
 [%collapsible]
 ====
-Infinicorp is providing you with a segmented portion of our environment to experiment with these model context protocol (mcp) servers to help you quickly and easily get information about systems in this environment. +
+Infinicorp is providing you with a segmented portion of our environment to experiment with these Model Context Protocol (MCP) servers to help you quickly and easily get information about systems in this environment. +
 
 Here is an architecture diagram of the provided environment:
 
@@ -39,7 +39,7 @@ Connected to the internet to simulate our customer facing front end systems:
 
 Disconnected from the internet to simulate our backend systems:
 
-* One (1) preconfigured Satellite server
+* One (1) preconfigured Red Hat Satellite server
 * Two (2) RHEL hosts each with a PostgreSQL database connected to Satellite
 
 The Satellite server is using Red Hat Lightspeed in Satellite, so while information about the environment is gathered and analyzed, that data does not leave the Satellite server nor is it sent to the Hybrid Cloud Console. +
@@ -49,28 +49,28 @@ Connected to all systems as the management layer:
 
 * One (1) preconfigured MCP host
 
-Preconfigured for you on the mcp host are the following MCP servers:
+Preconfigured for you on the MCP host are the following MCP servers:
 
 * https://github.com/RedHatInsights/insights-mcp/blob/main/README.md[Red Hat Lightspeed mcp server^]
 * https://docs.redhat.com/en/documentation/red_hat_satellite/6.18/html/managing_hosts/connecting-ai-applications-to-the-mcp-server-for-satellite[Red Hat Satellite mcp server^]
 * https://rhel-lightspeed.github.io/linux-mcp-server/[Red Hat Enterprise Linux (RHEL) mcp server^]
 
-You will be using *goose* as your local AI agent.  https://block.github.io/goose/[Goose^] is an open source, extensible AI agent. +
+You will be using *Goose* as your local AI agent.  https://block.github.io/goose/[Goose^] is an open source, extensible AI agent. +
 Goose is configured to use LiteLLM as a provider, with https://github.com/MiniMax-AI/MiniMax-M2[minimax-m2^] as a model. +
 This is all pre-configured for you in the segmented network that Infinicorp is providing.  
 
 These MCP servers are not generally available:
 
-* Lightspeed and RHEL MCP servers are Developer preview.  Be sure to read the  https://access.redhat.com/support/offerings/devpreview[Developer Preview - Scope of Support^]
+* Red Hat Lightspeed and RHEL MCP servers are Developer Preview.  Be sure to read the  https://access.redhat.com/support/offerings/devpreview[Developer Preview - Scope of Support^]
 * Satellite MCP server is Technology Preview. Be sure to read https://access.redhat.com/support/offerings/techpreview[Technology Preview Features - Scope of Support^]
 
-You may be wondering how Developer preview and Technology preview compare - luckily Red Hat has an article that covers that! Read: https://access.redhat.com/articles/6966848[Developer and Technology Previews: How they compare^].
+You may be wondering how Developer Preview and Technology Preview compare - luckily Red Hat has an article that covers that! Read: https://access.redhat.com/articles/6966848[Developer and Technology Previews: How they compare^].
 
 
 This guide will provide you with a series of sample prompts that you can use to evaluate system health, allowing you to see how these components work together through multi-server orchestration to create a "context-aware" infrastructure that simplifies management and accelerates incident response.
 
-The goose configuration itself has a default instruction prompt configured to load whenever a session starts. 
-At the end of each module you will be asked to exit the goose session.
+The Goose configuration itself has a default instruction prompt configured to load whenever a session starts. 
+At the end of each module you will be asked to exit the Goose session.
 In the beginning of the next module you will be asked to start a new goose session.
 This clears the context space and helps prevent errors in the environment. 
 This is something you should be doing in your environment as well to be sure a response from a previous prompt isn’t influencing your newest prompt.
