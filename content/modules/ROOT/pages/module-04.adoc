@@ -18,7 +18,7 @@ This module will have you querying Goose to check on overall security status and
 You should already have the MCP Server Terminal open from the previous module. + 
 If it isn’t already running, in the MCP terminal window, start a Goose session by running: 
 
-[source, role="sent-to", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 goose session
 ----
@@ -188,7 +188,7 @@ The lab environment has limited context available. +
 To help make sure that you have as consistent of a lab experience as possible, you will exit Goose at the end of each module and restart it in the next module. +
 In the Goose session enter: 
 
-[source, role="sent-to", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 /quit
 ----
@@ -202,3 +202,18 @@ This will end the Goose session and return you to the terminal prompt.
 This completes your review of the security posture of your Infinicorp systems. 
 
 Let’s look more at planning and reporting in the next module.
+
+=====
+.End to End validation
+[%collapsible]
+====
+++++
+<div class="solve-button-placeholder" data-module="module-04"></div>
+++++
+
+
+++++
+<div class="validate-button-placeholder" data-module="module-04"></div>
+++++
+====
+
