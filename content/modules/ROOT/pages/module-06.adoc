@@ -1,6 +1,6 @@
 :imagesdir: ../images
 
-Infinicorp is experimenting with a new feature of the MCP server for Red Hat Enterprise Linux (RHEL).
+Infinicorp is trying out  a new experimental feature of the MCP server for Red Hat Enterprise Linux (RHEL).
 
 This feature is called guarded command execution. 
 First, learn a little more about this feature, then Infinicorp will have you run two exercises with this so you can get some experience with it. 
