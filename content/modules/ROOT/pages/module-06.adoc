@@ -7,26 +7,6 @@ First, learn a little more about this feature, then Infinicorp will have you run
 
 
 =====
-.Start Goose
-[%collapsible]
-====
-You should already have the MCP Server Terminal open from the previous module. + 
-If it isn’t already running, in the MCP terminal window, start a goose session by running: 
-
-[source,sh,role="send-to-terminal",subs="attributes"]
-----
-goose session
-----
-
-This will start the goose session 
-
-WARNING: Be sure you ended the session from the previous module before starting this new module, otherwise commands may fail due to insufficient context space.  If goose is still running use ctrl+c or /quit to end the session and start a new session as instructed above.
-
-====
-=====
-
-
-=====
 .Guarded Command Execution
 [%collapsible]
 ====
