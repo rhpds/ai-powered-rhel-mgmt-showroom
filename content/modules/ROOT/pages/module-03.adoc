@@ -37,7 +37,7 @@ First, what do you have to work with? +
 You’ve just sat down in an unfamiliar environment and you don’t really know what you have to work with. +
 Why don’t you ask Goose to summarize it?
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 This environment is new to me - can you summarize the number of hosts, both connected to Lightspeed AND connected to Satellite, look at the installed packages, and summarize the versions of RHEL, key workloads, and other pertinent information I need to get familiar with this environment?
 ----
@@ -61,7 +61,7 @@ What if you just wanted to focus on the Satellite connected systems which are no
 You could specifically ask the Satellite MCP server for this information.  +
 In this prompt you’ll ask for a specific tool to give a response, helping you control the results that are returned.
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Ask the Satellitemcp, For all hosts that are registered into our company Satellite setup, provide details about subscriptions and installed content, combined with a compact report of the system status (disk usage, memory, cpu)
 ----
@@ -88,7 +88,7 @@ Since the attack surfaces are different in these environments, you should custom
 For the front end systems which are rhel-1-{guid} and rhel-2-{guid}, run this prompt:
 
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Use both the Lightspeed MCP and the RHEL MCP servers to evaluate the postgresql database on rhel-1-{guid} and rhel-2-{guid} for optimizations and best practices that I can use to improve performance.
 ----
@@ -101,7 +101,7 @@ From the output you should see a number of suggestions including applying the tu
 
 Let’s try a variation of that prompt for the backend systems which are rhel-3-{guid} and rhel-4-{guid}:
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Use both the Satellite MCP and the RHEL MCP servers to evaluate the postgresql database on rhel-3-{guid} and rhel-4-{guid} for optimizations and best practices that I can use to improve performance.
 ----
@@ -114,7 +114,7 @@ From the output you should see a similar list of suggestions including applying 
 
 Let’s combine these into a more complicated prompt and ask for the top 5 things that need to be done on all hosts.
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Are there other changes on rhel-1-{guid}, rhel-2-{guid}, rhel-3-{guid}, or rhel-4-{guid} servers that can be done to improve system or database performance? Use Lightspeed, Satellite, and RHEL mcp servers to give a full evaluation and then give me ONLY the top 5 things that I should do on all of these hosts.
 ----
@@ -124,7 +124,7 @@ image::lb1305_M3_Postgresql_Top5.png[link=self, window=blank, width=100%]
 
 This looks like some great information - why don’t you repackage this into an executive report that you can use to request the outage window that you’ll need to resolve this?
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Give me a report of these issues that I can include in an executive report to my management team to request an outage window for necessary improvements and include estimated benefits from the changes.
 ----

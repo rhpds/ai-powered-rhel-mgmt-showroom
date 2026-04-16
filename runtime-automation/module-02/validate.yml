@@ -1,16 +1,47 @@
 ---
-# Module 02 — Validation playbook
-# Multi-task validation — each task outputs ✅ or ❌
+# Module 02 — Validate: Verifying connectivity to MCP Servers
+#
+# ⚠️  All student tasks are interactive Goose AI prompts — ZT runner cannot
+#     execute or verify AI-generated responses.
+#     Validation confirms MCP server endpoints are reachable as proxy check.
 
-- name: Validate Module 02
-  hosts: bastion
+- name: Validate Module 02 — MCP Server connectivity
+  hosts: localhost
+  connection: local
   gather_facts: false
-  become: true
-  vars:
-    ansible_user: "{{ bastion_user | default('lab-user') }}"
   tasks:
-    - name: Placeholder — replace with actual validation checks
+    - name: Check MCP server (port 8080) is reachable
+      ansible.builtin.uri:
+        url: "{{ mcp_server_8080 }}"
+        method: GET
+        validate_certs: false
+        status_code: [200, 301, 302, 401, 403]
+        timeout: 15
+      register: r_mcp_8080
+      ignore_errors: true
+
+    - name: Check MCP server (port 9999) is reachable
+      ansible.builtin.uri:
+        url: "{{ mcp_server_9090 }}"
+        method: GET
+        validate_certs: false
+        status_code: [200, 301, 302, 401, 403]
+        timeout: 15
+      register: r_mcp_9090
+      ignore_errors: true
+
+    - name: Validate MCP server endpoints
       validation_check:
-        check: true
-        pass_msg: "✅ Validation placeholder passes"
-        error_msg: "❌ Validation not yet implemented"
+        check: >-
+          {{
+            r_mcp_8080.status is defined and r_mcp_8080.status in [200, 301, 302, 401, 403]
+            and
+            r_mcp_9090.status is defined and r_mcp_9090.status in [200, 301, 302, 401, 403]
+          }}
+        pass_msg: |
+          ✅ MCP server (port 8080) reachable — HTTP {{ r_mcp_8080.status }}
+          ✅ MCP server (port 9999) reachable — HTTP {{ r_mcp_9090.status }}
+          ⚠️  Goose AI prompt responses are verified manually (not automatable)
+        error_msg: |
+          {{ '✅' if r_mcp_8080.status is defined and r_mcp_8080.status in [200, 301, 302, 401, 403] else '❌' }} MCP port 8080 — {{ r_mcp_8080.status | default('unreachable') }}
+          {{ '✅' if r_mcp_9090.status is defined and r_mcp_9090.status in [200, 301, 302, 401, 403] else '❌' }} MCP port 9999 — {{ r_mcp_9090.status | default('unreachable') }}

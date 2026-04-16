@@ -25,7 +25,7 @@ Goose also has a graphical user interface (GUI), but you’ll be using the comma
 
 In the MCP terminal window, start a tmux session by running: 
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 tmux
 ----
@@ -35,7 +35,7 @@ Depending on your computer configuration you may need to use the keyboard comman
 
 Then, start a Goose session by running: 
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 goose session
 ----
@@ -68,7 +68,7 @@ As a reminder, the three MCP servers are:
 
 Make sure you are in the Goose session, and run the following prompt:
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Give me a simple list of the MCP servers you are currently connected to.
 ----
@@ -100,7 +100,7 @@ That is to be expected.
 
 Goose says you’re connected, but to be completely sure, you should run a prompt to verify.  Start with asking how many systems are connected to Red Hat Lightspeed at the Hybrid Cloud Console (also known as console.redhat.com) by running the following prompt:
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 How many systems are connected to Red Hat Lightspeed? 
 ----
@@ -125,7 +125,7 @@ This confirms that Goose is able to communicate with the APIs over at the Hybrid
 
 Now to check the Satellite MCP server, ask Goose what systems are connected to the Satellite.
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 What hosts are connected to my Satellite? 
 ----
@@ -151,7 +151,7 @@ This confirms that Goose is able to communicate with your Satellite server using
 
 The RHEL MCP server looks in more detail at specific systems - to test it out you’ll need to ask about a specific RHEL system.
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Check the current CPU load and memory usage for rhel-3-{guid} 
 ----
@@ -207,13 +207,13 @@ Use a web browser to navigate to the https://console.redhat.com[Hybrid Cloud Con
 Log into the Hybrid Cloud Console with the following credentials: +
 
 User:
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
  rhpd-lightspeed-lb1305
 ----
 
 Password:
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 rhdp*lightspeed2026!
 ----
@@ -226,12 +226,12 @@ To log in, you’ll need the following credentials to log into the Satellite Web
 
 You can copy and paste each of them below.
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 admin
 ----
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 {satellite_password}
 ----

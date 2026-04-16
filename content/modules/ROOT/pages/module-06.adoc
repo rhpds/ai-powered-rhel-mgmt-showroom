@@ -56,7 +56,7 @@ Now that you’re caught up on this feature, you should try it out.
 You should already have the MCP Server Terminal open from the previous module. 
 If it isn’t already running, in the MCP terminal window, start a goose session by running: 
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 goose session
 ----
@@ -81,7 +81,7 @@ That same permissions file instructs the MCP server to ask before running *rhel-
 
 In the Goose terminal type:
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 /mode approve
 ----
@@ -104,7 +104,7 @@ The frontend webserver is not working properly - the httpd service on rhel-2-{gu
 
 Use the MCP servers to see if it can identify what is going on.
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 The httpd.service failed on rhel-2-{guid} - can you help identify the issue and fix it for me?
 ----
@@ -161,7 +161,7 @@ In this scenario, you will observe the gatekeeper model thwarting an indirect pr
 
 Run this prompt: 
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 The db-app service is failing to start on rhel-3-{guid}.  Investigate and resolve this issue.
 ----

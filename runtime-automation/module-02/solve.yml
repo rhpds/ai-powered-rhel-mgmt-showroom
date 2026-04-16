@@ -1,14 +1,35 @@
 ---
-# Module 02 — Solve playbook
-# Automates all student tasks for this module
+# Module 02 — Solve: Verifying connectivity to MCP Servers
+# All student tasks are interactive Goose AI prompts — not automatable.
+# Solve verifies the MCP server endpoints are reachable.
 
-- name: Solve Module 02
-  hosts: bastion
+- name: Solve Module 02 — Verify MCP server endpoints are up
+  hosts: localhost
+  connection: local
   gather_facts: false
-  become: true
-  vars:
-    ansible_user: "{{ bastion_user | default('lab-user') }}"
   tasks:
-    - name: Placeholder — replace with actual solve tasks
+    - name: Check MCP server (port 8080) is reachable
+      ansible.builtin.uri:
+        url: "{{ mcp_server_8080 }}"
+        method: GET
+        validate_certs: false
+        status_code: [200, 301, 302, 401, 403]
+        timeout: 15
+      register: r_mcp_8080
+      ignore_errors: true
+
+    - name: Check MCP server (port 9999) is reachable
+      ansible.builtin.uri:
+        url: "{{ mcp_server_9090 }}"
+        method: GET
+        validate_certs: false
+        status_code: [200, 301, 302, 401, 403]
+        timeout: 15
+      register: r_mcp_9090
+      ignore_errors: true
+
+    - name: Report MCP server status
       ansible.builtin.debug:
-        msg: "Solve logic goes here"
+        msg:
+          - "MCP port 8080: HTTP {{ r_mcp_8080.status | default('unreachable') }}"
+          - "MCP port 9999: HTTP {{ r_mcp_9090.status | default('unreachable') }}"

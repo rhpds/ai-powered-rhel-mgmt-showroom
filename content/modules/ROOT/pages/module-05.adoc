@@ -39,7 +39,7 @@ Tools like these MCP servers can help to query the inventory and find hosts in n
 
 You should focus first on the operating system and see if any are in need of OS level upgrades.
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Provide a simple summary of the versions of RHEL 9 and older in use and compare to the newest versions, highlighting the number of systems that are approaching end of life. The output should be a simple to read table. Do NOT list hostnames, just a count of systems. Do NOT report on RHEL 10 versions. Use the Lightspeed planning service to get this information.
 ----
@@ -63,7 +63,7 @@ While the majority of our fleet is using RHEL 10, it looks like we still have qu
 This means that we need to start building these upgrades into our maintenance plans. +
 You should ask the MCP servers to build you an executive summary that you can use to start building a plan and scheduling maintenance windows.
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Build me an executive summary of our fleet risk posture. Include which versions retire in the next 6 months, how many systems are affected, and the recommended upgrade path for each group.  Do NOT report on RHEL 10 versions. 
 ----
@@ -89,7 +89,7 @@ Why don’t you create a PostgreSQL specific plan?
 If you focus on the PostgreSQL specific portion of the environment, you could ask the MCP servers to create a migration plan, perhaps even focusing on not only the RHEL version, but the specific packages that need to be upgraded. +
 A prompt like this might get you the results you need:
 
-[source, role="execute", subs="attributes"]
+[source,sh,role="send-to-terminal",subs="attributes"]
 ----
 Cross-reference our upcoming deprecations with lifecycle data and draft a migration plan for our postgresql systems. Then, generate a report I can share with my manager on packages we need to migrate before the end of year. Do NOT report on RHEL 10 versions. 
 ----
