@@ -14,6 +14,3 @@ tabs:
     - name: '>_MCP_Host'
       url: /terminal2/
       type: terminal
-    # - name: '>_Bastion'
-    #   url: /wetty
-    #   type: terminal
