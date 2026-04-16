@@ -30,8 +30,8 @@ In the MCP terminal window, start a tmux session by running:
 tmux
 ----
 
-NOTE: When you see yellow blocks like above in this lab environment, notice that you can copy the command to your clipboard, then easily paste the command into the terminal window. +
-Depending on your computer configuration you may need to use the keyboard command **ctrl-shift-v** or right click menu to paste.
+NOTE: When you see green "play" buttons like above in this lab environment, notice that you can send the command directly into the terminal window. +
+If you choose to copy/paste, depending on your computer configuration you may need to use the keyboard command **ctrl-shift-v** or right click menu to paste.
 
 Then, start a Goose session by running: 
 
