@@ -12,16 +12,8 @@ view_switcher:
 
 tabs:
     - name: '>_MCP_Host'
-<<<<<<< HEAD
       path: /terminal2/
       port: 443
 #    - name: '>_Bastion'
 #      path: /wetty
 #      port: 443
-=======
-      url: /terminal2/
-      type: terminal
-    # - name: '>_Bastion'
-    #   url: /wetty
-    #   type: terminal
->>>>>>> fe15ff4 (update)
