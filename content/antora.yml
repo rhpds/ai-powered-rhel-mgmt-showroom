@@ -1,5 +1,14 @@
 name: modules
-title: Showroom Collection
-version: ~
+title: AI-Powered RHEL Management with MCP & Satellite
+version: master
 nav:
   - modules/ROOT/nav.adoc
+
+asciidoc:
+  attributes:
+    lab_name: "AI-Powered RHEL Management with MCP & Satellite"
+    release-version: master
+    page-pagination: true
+    page-links:
+    - url: https://redhat.com
+      text: Red Hat
