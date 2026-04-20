@@ -3,14 +3,16 @@
 #
 # Checks (all run on mcp-{guid} as lab-user via SSH):
 #   Task 1: Goose binary is present and executable
-#   Task 2: Lightspeed MCP server (lightspeedmcp) process is running
+#   Task 2: lightspeedmcp extension is configured in goose config
+#           (lightspeedmcp runs as a stdio subprocess only during an active goose session;
+#            the durable proof it was set up is its presence in ~/.config/goose/config.yaml)
 #   Task 3: No orphaned Goose session is running (block-01 guard + block-05 /quit completed)
 #
 # blocks 02-04 (AI prompts): non-deterministic — not validated.
 #
 # The durable end-state after a completed module-05 is:
 #   - goose binary available (prerequisite for the session to have worked)
-#   - lightspeedmcp process running (MCP server that Goose connects to)
+#   - lightspeedmcp configured in goose config (MCP extension that Goose connects to on session start)
 #   - goose process absent (session was started AND cleanly quit with /quit)
 
 - name: Module 05 Validation — add mcp node to inventory
@@ -45,20 +47,39 @@
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Check 2 — lightspeedmcp process is running on the MCP VM
+    # Check 2 — lightspeedmcp extension is configured in goose config
+    # lightspeedmcp is a stdio extension that launches only during a goose session;
+    # the durable state is its entry in ~/.config/goose/config.yaml
     # -------------------------------------------------------
-    - name: Check lightspeedmcp process running
-      ansible.builtin.shell: pgrep -f 'lightspeedmcp' > /dev/null 2>&1 && echo running || echo not-running
-      register: r_proc_lightspeed
+    - name: Find goose config file
+      ansible.builtin.shell: |
+        for path in /home/lab-user/.config/goose/config.yaml /home/lab-user/.goose/config.yaml; do
+          if [ -f "$path" ]; then
+            echo "$path"
+            break
+          fi
+        done
+      register: r_goose_config_path
       changed_when: false
       ignore_errors: true
+
+    - name: Set goose config path fact
+      ansible.builtin.set_fact:
+        _goose_config_file: "{{ r_goose_config_path.stdout | trim }}"
+
+    - name: Check lightspeedmcp extension configured in goose config
+      ansible.builtin.shell: "grep -q 'lightspeedmcp' {{ _goose_config_file }} 2>/dev/null && echo configured || echo missing"
+      register: r_lightspeed_cfg
+      changed_when: false
+      ignore_errors: true
+      when: _goose_config_file | length > 0
 
     # -------------------------------------------------------
     # Check 3 — No Goose session process is running
     # (proves: block-01 guard ran AND block-05 /quit completed)
     # -------------------------------------------------------
     - name: Check goose process is absent (session started and quit cleanly)
-      ansible.builtin.shell: pgrep -f 'goose' > /dev/null 2>&1 && echo running || echo not-running
+      ansible.builtin.shell: pgrep -x 'goose' > /dev/null 2>&1 && echo running || echo not-running
       register: r_goose_proc
       changed_when: false
       ignore_errors: true
@@ -69,7 +90,7 @@
     - name: Build task results
       ansible.builtin.set_fact:
         _task1_ok: "{{ r_goose_bin.rc | default(1) == 0 }}"
-        _task2_ok: "{{ (r_proc_lightspeed.stdout | default('not-running') | trim) == 'running' }}"
+        _task2_ok: "{{ _goose_config_file | length > 0 and (r_lightspeed_cfg.stdout | default('missing') | trim) == 'configured' }}"
         _task3_ok: "{{ (r_goose_proc.stdout | default('not-running') | trim) == 'not-running' }}"
 
     # -------------------------------------------------------
@@ -80,9 +101,9 @@
         check: "{{ _task1_ok and _task2_ok and _task3_ok }}"
         pass_msg: |
           Task 1: goose binary is present and executable on mcp-{{ guid }}
-          Task 2: lightspeedmcp process is running on mcp-{{ guid }}
+          Task 2: lightspeedmcp extension is configured in goose config on mcp-{{ guid }}
           Task 3: goose session is not running — session was started and quit cleanly with /quit
         error_msg: |
           {{ 'Task 1 ok' if _task1_ok else 'Task 1 FAILED — goose binary not found or not executable on mcp-' + guid + '. Contact your instructor.' }}
-          {{ 'Task 2 ok' if _task2_ok else 'Task 2 FAILED — lightspeedmcp process is not running on mcp-' + guid + '. Click Solve or restart the MCP service.' }}
+          {{ 'Task 2 ok' if _task2_ok else 'Task 2 FAILED — lightspeedmcp extension is not configured in goose config on mcp-' + guid + '. Check ~/.config/goose/config.yaml.' }}
           {{ 'Task 3 ok' if _task3_ok else 'Task 3 FAILED — a goose process is still running. In your terminal run: tmux send-keys -t main:0.0 "/quit" Enter — then validate again.' }}

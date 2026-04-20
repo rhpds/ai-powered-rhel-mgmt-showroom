@@ -10,9 +10,9 @@
 #   6. blocks 02-04: Natural-language AI prompts — SKIP (non-deterministic LLM output)
 #   7. block-05: Sends /quit to exit the Goose session cleanly
 #   8. Verifies:
-#      - Goose started (pgrep goose returned a PID after block-01)
-#      - Goose exited cleanly (pgrep goose is empty after /quit)
-#      - Lightspeed MCP server process is reachable from the MCP VM
+#      - Goose started (pgrep -x goose returned a PID after block-01)
+#      - Goose exited cleanly (pgrep -x goose is empty after /quit)
+#      - Lightspeed MCP extension is configured in goose config
 
 - name: Module 05 Solve — add mcp node to inventory
   hosts: localhost
@@ -37,11 +37,13 @@
 
     # -------------------------------------------------------------------------
     # Idempotency guard — kill any orphaned goose process from a prior run
+    # Use pgrep/pkill -x to match exact binary name only — avoids self-kill
+    # when the shell command itself contains 'goose' in its argument string.
     # -------------------------------------------------------------------------
     - name: Kill any orphaned goose process before starting
       ansible.builtin.shell: |
-        if pgrep -f 'goose' > /dev/null 2>&1; then
-          pkill -f 'goose' 2>/dev/null || true
+        if pgrep -x 'goose' > /dev/null 2>&1; then
+          pkill -x 'goose' 2>/dev/null || true
           sleep 2
         fi
         echo done
@@ -75,10 +77,10 @@
         seconds: 10
 
     # -------------------------------------------------------------------------
-    # Verify goose started (pgrep after block-01)
+    # Verify goose started (pgrep -x matches exact binary name after block-01)
     # -------------------------------------------------------------------------
     - name: Check goose process is running after start
-      ansible.builtin.shell: pgrep -f 'goose' 2>/dev/null
+      ansible.builtin.shell: pgrep -x 'goose' 2>/dev/null
       register: r_goose_pid
       changed_when: false
       ignore_errors: true
@@ -107,10 +109,11 @@
         seconds: 5
 
     # -------------------------------------------------------------------------
-    # Verify goose exited (pgrep should return empty after /quit)
+    # Verify goose exited (pgrep -x should return empty after /quit)
+    # Use exact-name match to avoid self-matching the pgrep command itself.
     # -------------------------------------------------------------------------
     - name: Check goose process is gone after /quit
-      ansible.builtin.shell: pgrep -f 'goose' 2>/dev/null || true
+      ansible.builtin.shell: pgrep -x 'goose' 2>/dev/null || true
       register: r_goose_gone
       changed_when: false
       ignore_errors: true
@@ -120,17 +123,32 @@
         _goose_exited: "{{ r_goose_gone.stdout | default('') | trim | length == 0 }}"
 
     # -------------------------------------------------------------------------
-    # Verify Lightspeed MCP server process is running on the MCP VM
+    # Verify lightspeedmcp extension is configured in goose config
+    # lightspeedmcp runs as a stdio subprocess only during an active session;
+    # the durable proof is its entry in the goose config file.
     # -------------------------------------------------------------------------
-    - name: Check lightspeedmcp process is running
-      ansible.builtin.shell: pgrep -f 'lightspeedmcp' > /dev/null 2>&1 && echo running || echo not-running
-      register: r_proc_lightspeed
+    - name: Find goose config file
+      ansible.builtin.shell: |
+        for path in /home/lab-user/.config/goose/config.yaml /home/lab-user/.goose/config.yaml; do
+          if [ -f "$path" ]; then
+            echo "$path"
+            break
+          fi
+        done
+      register: r_goose_config_path
       changed_when: false
       ignore_errors: true
 
-    - name: Set lightspeedmcp process status fact
+    - name: Check lightspeedmcp configured in goose config
+      ansible.builtin.shell: "grep -q 'lightspeedmcp' {{ r_goose_config_path.stdout | trim }} 2>/dev/null && echo configured || echo missing"
+      register: r_lightspeed_cfg
+      changed_when: false
+      ignore_errors: true
+      when: r_goose_config_path.stdout | trim | length > 0
+
+    - name: Set lightspeedmcp config status fact
       ansible.builtin.set_fact:
-        _lightspeed_ok: "{{ (r_proc_lightspeed.stdout | default('not-running')) == 'running' }}"
+        _lightspeed_ok: "{{ (r_lightspeed_cfg.stdout | default('missing') | trim) == 'configured' }}"
 
     # -------------------------------------------------------------------------
     # Report
@@ -141,5 +159,5 @@
           Orphaned goose process cleared:  ok
           Goose started (block-01):        {{ 'ok' if _goose_started else 'NOT ok — goose did not start' }}
           Goose exited cleanly (block-05): {{ 'ok' if _goose_exited else 'NOT ok — goose process still present' }}
-          Lightspeed MCP server running:   {{ 'ok' if _lightspeed_ok else 'NOT ok — lightspeedmcp process not found' }}
+          Lightspeed MCP configured:       {{ 'ok' if _lightspeed_ok else 'NOT ok — lightspeedmcp entry missing from goose config' }}
           blocks 02-04 (AI prompts):       SKIPPED — non-deterministic LLM output, not automatable
