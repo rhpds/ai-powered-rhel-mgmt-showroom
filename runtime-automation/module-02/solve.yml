@@ -1,35 +1,253 @@
 ---
-# Module 02 — Solve: Verifying connectivity to MCP Servers
-# All student tasks are interactive Goose AI prompts — not automatable.
-# Solve verifies the MCP server endpoints are reachable.
+# Module 02 Solve — Verifying connectivity to the MCP Servers
+#
+# What this playbook does:
+#   1. Ensures a tmux session is running on the mcp node (mcp-{guid}) as lab-user
+#   2. Starts a Goose session inside tmux, then immediately quits it
+#      (blocks 03-06 are natural-language AI prompts — non-deterministic, not automatable)
+#   3. Verifies all validation targets:
+#      - tmux running
+#      - goose binary present and executable
+#      - goose config contains three MCP server entries
+#      - lightspeedmcp, satellitemcp, rhel-mcp-server processes running
+#      - Satellite API reachable (HTTP 200 with hosts)
+#      - rhel-3-{guid} host reachable via SSH
 
-- name: Solve Module 02 — Verify MCP server endpoints are up
+- name: Module 02 Solve — add node to inventory
   hosts: localhost
   connection: local
   gather_facts: false
   tasks:
-    - name: Check MCP server (port 8080) is reachable
-      ansible.builtin.uri:
-        url: "{{ mcp_server_8080 }}"
-        method: GET
-        validate_certs: false
-        status_code: [200, 301, 302, 401, 403]
-        timeout: 15
-      register: r_mcp_8080
+    - name: Add mcp node to inventory
+      ansible.builtin.add_host:
+        name: node
+        ansible_host: "mcp-{{ guid | default('') }}"
+        ansible_user: lab-user
+        ansible_ssh_private_key_file: /app/.ssh/id_rsa
+        ansible_ssh_common_args: "-F /app/.ssh/config"
+
+- name: Module 02 Solve — MCP server connectivity verification
+  hosts: node
+  gather_facts: false
+  vars:
+    # satellite_password is injected as an extravar at runtime
+    satellite_password: "{{ satellite_password | default('') }}"
+    guid: "{{ guid | default('') }}"
+    satellite_host: "satellite-{{ guid }}.apps.ocpvdev01.rhdp.net"
+    rhel3_host: "rhel-3-{{ guid }}"
+    goose_config_paths:
+      - /home/lab-user/.config/goose/config.yaml
+      - /home/lab-user/.goose/config.yaml
+
+  tasks:
+
+    # -------------------------------------------------------------------------
+    # block-01: Start tmux (idempotent — skip if already running)
+    # -------------------------------------------------------------------------
+    - name: Check if tmux session already running
+      ansible.builtin.shell: tmux list-sessions 2>/dev/null | grep -q '.' && echo running || echo not-running
+      register: r_tmux_check
+      changed_when: false
       ignore_errors: true
 
-    - name: Check MCP server (port 9999) is reachable
-      ansible.builtin.uri:
-        url: "{{ mcp_server_9090 }}"
-        method: GET
-        validate_certs: false
-        status_code: [200, 301, 302, 401, 403]
-        timeout: 15
-      register: r_mcp_9090
+    - name: Start detached tmux session if not running
+      ansible.builtin.shell: tmux new-session -d -s main 2>/dev/null || true
+      when: r_tmux_check.stdout | default('not-running') == 'not-running'
       ignore_errors: true
 
-    - name: Report MCP server status
+    # -------------------------------------------------------------------------
+    # block-02: Start Goose session (send to tmux pane)
+    # block-07: Quit Goose immediately after start
+    # blocks 03-06 are natural-language AI prompts — SKIP (non-deterministic)
+    # -------------------------------------------------------------------------
+    - name: Send 'goose session' to tmux pane
+      ansible.builtin.shell: "tmux send-keys -t main:0.0 'goose session' Enter"
+      ignore_errors: true
+
+    - name: Wait briefly for Goose to initialize
+      ansible.builtin.pause:
+        seconds: 8
+
+    - name: Send '/quit' to exit Goose session (block-07)
+      ansible.builtin.shell: "tmux send-keys -t main:0.0 '/quit' Enter"
+      ignore_errors: true
+
+    - name: Wait briefly for Goose to exit
+      ansible.builtin.pause:
+        seconds: 3
+
+    # -------------------------------------------------------------------------
+    # Verification — tmux running
+    # -------------------------------------------------------------------------
+    - name: Verify tmux is running
+      ansible.builtin.shell: tmux list-sessions 2>/dev/null
+      register: r_tmux_verify
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set tmux status fact
+      ansible.builtin.set_fact:
+        _tmux_ok: "{{ r_tmux_verify.rc | default(1) == 0 and r_tmux_verify.stdout | default('') | length > 0 }}"
+
+    # -------------------------------------------------------------------------
+    # Verification — goose binary present and executable
+    # -------------------------------------------------------------------------
+    - name: Check goose binary exists and is executable
+      ansible.builtin.shell: command -v goose && goose --version 2>&1 | head -1
+      register: r_goose_bin
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set goose binary status fact
+      ansible.builtin.set_fact:
+        _goose_bin_ok: "{{ r_goose_bin.rc | default(1) == 0 }}"
+
+    # -------------------------------------------------------------------------
+    # Verification — goose config file location
+    # -------------------------------------------------------------------------
+    - name: Find goose config file
+      ansible.builtin.shell: |
+        for path in /home/lab-user/.config/goose/config.yaml /home/lab-user/.goose/config.yaml; do
+          if [ -f "$path" ]; then
+            echo "$path"
+            break
+          fi
+        done
+      register: r_goose_config_path
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set goose config path fact
+      ansible.builtin.set_fact:
+        _goose_config_file: "{{ r_goose_config_path.stdout | trim }}"
+
+    # -------------------------------------------------------------------------
+    # Verification — goose config contains three MCP server entries
+    # -------------------------------------------------------------------------
+    - name: Check goose config for lightspeedmcp entry
+      ansible.builtin.shell: "grep -q 'lightspeedmcp' {{ _goose_config_file }} 2>/dev/null && echo found || echo missing"
+      register: r_mcp_lightspeed
+      changed_when: false
+      ignore_errors: true
+      when: _goose_config_file | length > 0
+
+    - name: Check goose config for satellitemcp entry
+      ansible.builtin.shell: "grep -q 'satellitemcp' {{ _goose_config_file }} 2>/dev/null && echo found || echo missing"
+      register: r_mcp_satellite
+      changed_when: false
+      ignore_errors: true
+      when: _goose_config_file | length > 0
+
+    - name: Check goose config for rhel-mcp-server entry
+      ansible.builtin.shell: "grep -q 'rhel-mcp-server' {{ _goose_config_file }} 2>/dev/null && echo found || echo missing"
+      register: r_mcp_rhel
+      changed_when: false
+      ignore_errors: true
+      when: _goose_config_file | length > 0
+
+    - name: Set goose config MCP entries status fact
+      ansible.builtin.set_fact:
+        _goose_config_ok: >-
+          {{
+            _goose_config_file | length > 0
+            and (r_mcp_lightspeed.stdout | default('missing')) == 'found'
+            and (r_mcp_satellite.stdout | default('missing')) == 'found'
+            and (r_mcp_rhel.stdout | default('missing')) == 'found'
+          }}
+
+    # -------------------------------------------------------------------------
+    # Verification — lightspeedmcp process running
+    # -------------------------------------------------------------------------
+    - name: Check lightspeedmcp process is running
+      ansible.builtin.shell: pgrep -f 'lightspeedmcp' > /dev/null 2>&1 && echo running || echo not-running
+      register: r_proc_lightspeed
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set lightspeedmcp process status fact
+      ansible.builtin.set_fact:
+        _proc_lightspeed_ok: "{{ (r_proc_lightspeed.stdout | default('not-running')) == 'running' }}"
+
+    # -------------------------------------------------------------------------
+    # Verification — satellitemcp process running
+    # -------------------------------------------------------------------------
+    - name: Check satellitemcp process is running
+      ansible.builtin.shell: pgrep -f 'satellitemcp' > /dev/null 2>&1 && echo running || echo not-running
+      register: r_proc_satellite
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set satellitemcp process status fact
+      ansible.builtin.set_fact:
+        _proc_satellite_ok: "{{ (r_proc_satellite.stdout | default('not-running')) == 'running' }}"
+
+    # -------------------------------------------------------------------------
+    # Verification — rhel-mcp-server process running
+    # -------------------------------------------------------------------------
+    - name: Check rhel-mcp-server process is running
+      ansible.builtin.shell: pgrep -f 'rhel-mcp-server' > /dev/null 2>&1 && echo running || echo not-running
+      register: r_proc_rhel
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set rhel-mcp-server process status fact
+      ansible.builtin.set_fact:
+        _proc_rhel_ok: "{{ (r_proc_rhel.stdout | default('not-running')) == 'running' }}"
+
+    # -------------------------------------------------------------------------
+    # Verification — Satellite API reachable (HTTP 200, count > 0)
+    # -------------------------------------------------------------------------
+    - name: Query Satellite API for hosts
+      ansible.builtin.shell: "curl -sk -u admin:{{ satellite_password }} https://{{ satellite_host }}/api/hosts -o /tmp/sat_hosts.json -w '%{http_code}'"
+      register: r_sat_api
+      changed_when: false
+      ignore_errors: true
+      when: satellite_password | length > 0
+
+    - name: Get host count from Satellite API response
+      ansible.builtin.shell: "python3 -c \"import json,sys; d=json.load(open('/tmp/sat_hosts.json')); print(d.get('total', 0))\""
+      register: r_sat_count
+      changed_when: false
+      ignore_errors: true
+      when: satellite_password | length > 0 and r_sat_api.stdout | default('') == '200'
+
+    - name: Set Satellite API status fact
+      ansible.builtin.set_fact:
+        _sat_api_ok: >-
+          {{
+            satellite_password | length > 0
+            and (r_sat_api.stdout | default('000')) == '200'
+            and (r_sat_count.stdout | default('0') | int) > 0
+          }}
+
+    # -------------------------------------------------------------------------
+    # Verification — rhel-3-{guid} SSH reachable from mcp node
+    # Uses mcp node's own SSH key (~/.ssh/p5s2gkey.pem) and config
+    # -------------------------------------------------------------------------
+    - name: Check rhel-3-{guid} is reachable via SSH from mcp node
+      ansible.builtin.shell: "ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10 {{ rhel3_host }} 'echo ssh-ok' 2>&1"
+      register: r_rhel3_ssh
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set rhel-3 SSH status fact
+      ansible.builtin.set_fact:
+        _rhel3_ssh_ok: "{{ (r_rhel3_ssh.stdout | default('')) is search('ssh-ok') }}"
+
+    # -------------------------------------------------------------------------
+    # Report
+    # -------------------------------------------------------------------------
+    - name: Report solve status
       ansible.builtin.debug:
-        msg:
-          - "MCP port 8080: HTTP {{ r_mcp_8080.status | default('unreachable') }}"
-          - "MCP port 9999: HTTP {{ r_mcp_9090.status | default('unreachable') }}"
+        msg: |
+          tmux running on mcp node:          {{ 'ok' if _tmux_ok else 'NOT ok' }}
+          goose binary present/executable:   {{ 'ok' if _goose_bin_ok else 'NOT ok' }}
+          goose config path found:           {{ _goose_config_file if _goose_config_file | length > 0 else 'NOT FOUND' }}
+          goose config has lightspeedmcp:    {{ 'ok' if (r_mcp_lightspeed.stdout | default('missing')) == 'found' else 'NOT ok' }}
+          goose config has satellitemcp:     {{ 'ok' if (r_mcp_satellite.stdout | default('missing')) == 'found' else 'NOT ok' }}
+          goose config has rhel-mcp-server:  {{ 'ok' if (r_mcp_rhel.stdout | default('missing')) == 'found' else 'NOT ok' }}
+          lightspeedmcp process running:     {{ 'ok' if _proc_lightspeed_ok else 'NOT ok' }}
+          satellitemcp process running:      {{ 'ok' if _proc_satellite_ok else 'NOT ok' }}
+          rhel-mcp-server process running:   {{ 'ok' if _proc_rhel_ok else 'NOT ok' }}
+          Satellite API reachable (hosts>0): {{ 'ok' if _sat_api_ok else 'NOT ok (check satellite_password extravar)' }}
+          rhel-3-{{ guid }} SSH reachable:   {{ 'ok' if _rhel3_ssh_ok else 'NOT ok' }}

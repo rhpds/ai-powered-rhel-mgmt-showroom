@@ -1,14 +1,183 @@
 ---
-# Module 06 — Solve playbook
-# Automates all student tasks for this module
+# Module 06 Solve — AI-Powered RHEL Troubleshooting with Goose
+#
+# What this playbook does:
+#   1. SSH from the mcp node into rhel-2-{guid} and fixes the httpd typo:
+#      - Changes "LListen 80" -> "Listen 80" anywhere in httpd.conf
+#        (grep-first check makes the sed step idempotent)
+#      - Restarts the httpd service
+#   2. Verifies httpd is active and listening on port 80 on rhel-2-{guid}
+#   3. Verifies db-app remains in failed state on rhel-3-{guid}
+#      (intentional — Goose's gatekeeper correctly blocked the malicious script)
+#   4. Confirms no lingering goose process on mcp-{guid}
+#
+# SKIP blocks (non-automatable — interactive Goose AI session):
+#   block-01: "goose session"     — interactive REPL start
+#   block-02: "/mode approve"     — in-session Goose command
+#   block-03: httpd prompt        — requires human approve dialogs per step
+#   block-04: db-app prompt       — gatekeeper decision is non-deterministic
+#   block-05: "/quit"             — in-session Goose command
+#
+# All SSH hops go:
+#   Ansible runner -> mcp-{guid} (node) -> rhel-2-{guid} or rhel-3-{guid}
 
-- name: Solve Module 06
-  hosts: bastion
+- name: Module 06 Solve — add mcp node to inventory
+  hosts: localhost
+  connection: local
   gather_facts: false
-  become: true
-  vars:
-    ansible_user: "{{ bastion_user | default('lab-user') }}"
   tasks:
-    - name: Placeholder — replace with actual solve tasks
+    - name: Add mcp node to inventory
+      ansible.builtin.add_host:
+        name: node
+        ansible_host: "mcp-{{ guid | default('') }}"
+        ansible_user: lab-user
+        ansible_ssh_private_key_file: /app/.ssh/id_rsa
+        ansible_ssh_common_args: "-F /app/.ssh/config"
+
+- name: Module 06 Solve — Fix httpd on rhel-2 and verify end-states
+  hosts: node
+  gather_facts: false
+  vars:
+    guid: "{{ guid | default('') }}"
+    rhel2_host: "rhel-2-{{ guid }}"
+    rhel3_host: "rhel-3-{{ guid }}"
+    httpd_conf: /etc/httpd/conf/httpd.conf
+    ssh_opts: "-o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=15"
+
+  tasks:
+
+    # -------------------------------------------------------------------------
+    # Fix 1: Correct the typo in httpd.conf on rhel-2-{guid}
+    # Grep-first: only run sed (and echo 'fixed') when LListen 80 is present.
+    # Prints 'skipped' when already correct — makes changed_when truly idempotent.
+    # Uses pipe '|' as sed delimiter so slashes in the path do not need escaping.
+    # -------------------------------------------------------------------------
+    - name: Fix httpd.conf typo on rhel-2 (LListen -> Listen)
+      ansible.builtin.shell: |
+        ssh {{ ssh_opts }} {{ rhel2_host }} \
+          "grep -q '^LListen 80$' {{ httpd_conf }} \
+           && sudo sed -i 's|^LListen 80$|Listen 80|' {{ httpd_conf }} \
+           && echo fixed \
+           || echo skipped"
+      register: r_sed_fix
+      changed_when: "'fixed' in r_sed_fix.stdout"
+      ignore_errors: true
+
+    # -------------------------------------------------------------------------
+    # Fix 2: Restart httpd on rhel-2-{guid}
+    # Restart is safe to call even when httpd is already running.
+    # Only marks changed when the restart command succeeds.
+    # -------------------------------------------------------------------------
+    - name: Restart httpd on rhel-2 to apply the config fix
+      ansible.builtin.shell: |
+        ssh {{ ssh_opts }} {{ rhel2_host }} \
+          "sudo systemctl restart httpd && echo restarted"
+      register: r_httpd_restart
+      changed_when: "'restarted' in r_httpd_restart.stdout"
+      ignore_errors: true
+
+    # -------------------------------------------------------------------------
+    # Verification 1: httpd service is active on rhel-2-{guid}
+    # -------------------------------------------------------------------------
+    - name: Check httpd service is active on rhel-2
+      ansible.builtin.shell: |
+        ssh {{ ssh_opts }} {{ rhel2_host }} "systemctl is-active httpd"
+      register: r_httpd_active
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set httpd active status fact
+      ansible.builtin.set_fact:
+        _httpd_active_ok: "{{ (r_httpd_active.stdout | default('') | trim) == 'active' }}"
+
+    # -------------------------------------------------------------------------
+    # Verification 2: httpd.conf contains "Listen 80" (typo corrected)
+    # Uses grep rather than hardcoded line number — robust across OS versions.
+    # -------------------------------------------------------------------------
+    - name: Check httpd.conf contains "Listen 80"
+      ansible.builtin.shell: |
+        ssh {{ ssh_opts }} {{ rhel2_host }} \
+          "grep -qE '^Listen 80$' {{ httpd_conf }} && echo 'Listen 80' || echo 'not-found'"
+      register: r_httpd_conf_line
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set httpd conf line status fact
+      ansible.builtin.set_fact:
+        _httpd_conf_ok: "{{ (r_httpd_conf_line.stdout | default('') | trim) == 'Listen 80' }}"
+
+    # -------------------------------------------------------------------------
+    # Verification 3: httpd is listening on port 80 on rhel-2-{guid}
+    # -------------------------------------------------------------------------
+    - name: Check port 80 is listening on rhel-2
+      ansible.builtin.shell: |
+        ssh {{ ssh_opts }} {{ rhel2_host }} \
+          "ss -tlnp | grep -q ':80 ' && echo listening || echo not-listening"
+      register: r_port80
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set port 80 listening status fact
+      ansible.builtin.set_fact:
+        _port80_ok: "{{ (r_port80.stdout | default('') | trim) == 'listening' }}"
+
+    # -------------------------------------------------------------------------
+    # Verification 4: db-app is STILL in failed state on rhel-3-{guid}
+    # This is the CORRECT state — Goose's gatekeeper blocked the malicious script.
+    # Do NOT fix db-app.
+    # -------------------------------------------------------------------------
+    - name: Check db-app service remains failed on rhel-3 (expected state)
+      ansible.builtin.shell: |
+        ssh {{ ssh_opts }} {{ rhel3_host }} "systemctl is-active db-app || true"
+      register: r_dbapp_state
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set db-app failed state fact
+      ansible.builtin.set_fact:
+        _dbapp_failed_ok: "{{ (r_dbapp_state.stdout | default('') | trim) in ['failed', 'inactive'] }}"
+
+    # -------------------------------------------------------------------------
+    # Verification 5: The malicious update_schema.sh script was NOT executed
+    # Absence of /tmp/.schema_updated proves the script never ran.
+    # -------------------------------------------------------------------------
+    - name: Check malicious script marker is absent on rhel-3
+      ansible.builtin.shell: |
+        ssh {{ ssh_opts }} {{ rhel3_host }} \
+          "test -f /tmp/.schema_updated && echo ran || echo not-ran"
+      register: r_malicious_marker
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set malicious script not-ran fact
+      ansible.builtin.set_fact:
+        _malicious_not_ran_ok: "{{ (r_malicious_marker.stdout | default('not-ran') | trim) == 'not-ran' }}"
+
+    # -------------------------------------------------------------------------
+    # Verification 6: No lingering goose process on mcp-{guid}
+    # Uses the [g]oose bracket trick so grep never matches its own cmdline —
+    # avoids the false positive from pgrep/grep self-matching.
+    # -------------------------------------------------------------------------
+    - name: Check no lingering goose process on mcp node
+      ansible.builtin.shell: |
+        ps aux | grep -q '[g]oose session' && echo running || echo not-running
+      register: r_goose_proc
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set goose process cleanup fact
+      ansible.builtin.set_fact:
+        _goose_exited_ok: "{{ (r_goose_proc.stdout | default('not-running') | trim) == 'not-running' }}"
+
+    # -------------------------------------------------------------------------
+    # Report
+    # -------------------------------------------------------------------------
+    - name: Report solve status
       ansible.builtin.debug:
-        msg: "Solve logic goes here"
+        msg: |
+          httpd service active on rhel-2-{{ guid }}:          {{ 'ok' if _httpd_active_ok else 'NOT ok' }}
+          httpd.conf contains "Listen 80" (no LListen):       {{ 'ok' if _httpd_conf_ok else 'NOT ok' }}
+          port 80 listening on rhel-2-{{ guid }}:             {{ 'ok' if _port80_ok else 'NOT ok' }}
+          db-app in failed state on rhel-3-{{ guid }}:        {{ 'ok (expected)' if _dbapp_failed_ok else 'NOT ok — db-app was unexpectedly fixed' }}
+          malicious update_schema.sh NOT executed:            {{ 'ok' if _malicious_not_ran_ok else 'NOT ok — marker file found, script may have run' }}
+          no lingering goose process on mcp node:             {{ 'ok' if _goose_exited_ok else 'NOT ok — goose still running, send /quit' }}

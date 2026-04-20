@@ -1,14 +1,234 @@
 ---
-# Module 03 — Solve playbook
-# Automates all student tasks for this module
+# Module 03 Solve — PostgreSQL deployment via Goose AI + MCP servers
+#
+# Coverage: 0% — all lab blocks are natural-language Goose AI prompts (non-deterministic,
+#            not automatable). This playbook verifies infrastructure prerequisites only.
+#
+# What this playbook verifies:
+#   1. Goose binary is available on mcp-{guid}
+#   2. rhel-1-{guid} through rhel-4-{guid} are reachable via SSH from the mcp node
+#   3. PostgreSQL service is active on rhel-1-{guid} and rhel-2-{guid}
+#   4. PostgreSQL service is active on rhel-3-{guid} and rhel-4-{guid}
+#   5. Satellite MCP server (satellitemcp) process is running on mcp node
+#   6. Lightspeed MCP server (lightspeedmcp) process is running on mcp node
+#   7. RHEL MCP server (rhel-mcp-server) process is running on mcp node
+#
+# NOTE: The actual PostgreSQL setup is performed by the student via Goose AI prompts.
+#       This playbook only verifies the durable outcomes (service state) that
+#       those prompts should produce.
 
-- name: Solve Module 03
-  hosts: bastion
+- name: Module 03 Solve — add mcp node to inventory
+  hosts: localhost
+  connection: local
   gather_facts: false
-  become: true
-  vars:
-    ansible_user: "{{ bastion_user | default('lab-user') }}"
   tasks:
-    - name: Placeholder — replace with actual solve tasks
+    - name: Add mcp node to inventory
+      ansible.builtin.add_host:
+        name: node
+        ansible_host: "mcp-{{ guid | default('') }}"
+        ansible_user: lab-user
+        ansible_ssh_private_key_file: /app/.ssh/id_rsa
+        ansible_ssh_common_args: "-F /app/.ssh/config"
+
+- name: Module 03 Solve — verify PostgreSQL and MCP infrastructure
+  hosts: node
+  gather_facts: false
+  vars:
+    guid: "{{ guid | default('') }}"
+    rhel1_host: "rhel-1-{{ guid }}"
+    rhel2_host: "rhel-2-{{ guid }}"
+    rhel3_host: "rhel-3-{{ guid }}"
+    rhel4_host: "rhel-4-{{ guid }}"
+
+  tasks:
+
+    # -------------------------------------------------------------------------
+    # Check 1 — goose binary present and executable
+    # -------------------------------------------------------------------------
+    - name: Check goose binary present and executable
+      ansible.builtin.shell: command -v goose && goose --version 2>&1 | head -1
+      register: r_goose_bin
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set goose binary status fact
+      ansible.builtin.set_fact:
+        _goose_bin_ok: "{{ r_goose_bin.rc | default(1) == 0 }}"
+
+    # -------------------------------------------------------------------------
+    # Check 2 — rhel-1-{guid} reachable via SSH from mcp node
+    # -------------------------------------------------------------------------
+    - name: Check rhel-1-{guid} reachable via SSH
+      ansible.builtin.shell: >
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
+        {{ rhel1_host }} 'echo ssh-ok' 2>&1
+      register: r_rhel1_ssh
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set rhel-1 SSH status fact
+      ansible.builtin.set_fact:
+        _rhel1_ssh_ok: "{{ (r_rhel1_ssh.stdout | default('')) is search('ssh-ok') }}"
+
+    # -------------------------------------------------------------------------
+    # Check 3 — rhel-2-{guid} reachable via SSH from mcp node
+    # -------------------------------------------------------------------------
+    - name: Check rhel-2-{guid} reachable via SSH
+      ansible.builtin.shell: >
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
+        {{ rhel2_host }} 'echo ssh-ok' 2>&1
+      register: r_rhel2_ssh
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set rhel-2 SSH status fact
+      ansible.builtin.set_fact:
+        _rhel2_ssh_ok: "{{ (r_rhel2_ssh.stdout | default('')) is search('ssh-ok') }}"
+
+    # -------------------------------------------------------------------------
+    # Check 4 — rhel-3-{guid} reachable via SSH from mcp node
+    # -------------------------------------------------------------------------
+    - name: Check rhel-3-{guid} reachable via SSH
+      ansible.builtin.shell: >
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
+        {{ rhel3_host }} 'echo ssh-ok' 2>&1
+      register: r_rhel3_ssh
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set rhel-3 SSH status fact
+      ansible.builtin.set_fact:
+        _rhel3_ssh_ok: "{{ (r_rhel3_ssh.stdout | default('')) is search('ssh-ok') }}"
+
+    # -------------------------------------------------------------------------
+    # Check 5 — rhel-4-{guid} reachable via SSH from mcp node
+    # -------------------------------------------------------------------------
+    - name: Check rhel-4-{guid} reachable via SSH
+      ansible.builtin.shell: >
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
+        {{ rhel4_host }} 'echo ssh-ok' 2>&1
+      register: r_rhel4_ssh
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set rhel-4 SSH status fact
+      ansible.builtin.set_fact:
+        _rhel4_ssh_ok: "{{ (r_rhel4_ssh.stdout | default('')) is search('ssh-ok') }}"
+
+    # -------------------------------------------------------------------------
+    # Check 6 — PostgreSQL active on rhel-1-{guid}
+    # -------------------------------------------------------------------------
+    - name: Check postgresql active on rhel-1-{guid}
+      ansible.builtin.shell: >
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
+        {{ rhel1_host }} 'systemctl is-active postgresql' 2>&1
+      register: r_pg_rhel1
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set postgresql rhel-1 status fact
+      ansible.builtin.set_fact:
+        _pg_rhel1_ok: "{{ (r_pg_rhel1.stdout | default('') | trim) == 'active' }}"
+
+    # -------------------------------------------------------------------------
+    # Check 7 — PostgreSQL active on rhel-2-{guid}
+    # -------------------------------------------------------------------------
+    - name: Check postgresql active on rhel-2-{guid}
+      ansible.builtin.shell: >
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
+        {{ rhel2_host }} 'systemctl is-active postgresql' 2>&1
+      register: r_pg_rhel2
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set postgresql rhel-2 status fact
+      ansible.builtin.set_fact:
+        _pg_rhel2_ok: "{{ (r_pg_rhel2.stdout | default('') | trim) == 'active' }}"
+
+    # -------------------------------------------------------------------------
+    # Check 8 — PostgreSQL active on rhel-3-{guid}
+    # -------------------------------------------------------------------------
+    - name: Check postgresql active on rhel-3-{guid}
+      ansible.builtin.shell: >
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
+        {{ rhel3_host }} 'systemctl is-active postgresql' 2>&1
+      register: r_pg_rhel3
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set postgresql rhel-3 status fact
+      ansible.builtin.set_fact:
+        _pg_rhel3_ok: "{{ (r_pg_rhel3.stdout | default('') | trim) == 'active' }}"
+
+    # -------------------------------------------------------------------------
+    # Check 9 — PostgreSQL active on rhel-4-{guid}
+    # -------------------------------------------------------------------------
+    - name: Check postgresql active on rhel-4-{guid}
+      ansible.builtin.shell: >
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
+        {{ rhel4_host }} 'systemctl is-active postgresql' 2>&1
+      register: r_pg_rhel4
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set postgresql rhel-4 status fact
+      ansible.builtin.set_fact:
+        _pg_rhel4_ok: "{{ (r_pg_rhel4.stdout | default('') | trim) == 'active' }}"
+
+    # -------------------------------------------------------------------------
+    # Check 10 — Satellite MCP server (satellitemcp) process running
+    # -------------------------------------------------------------------------
+    - name: Check satellitemcp process running
+      ansible.builtin.shell: pgrep -f 'satellitemcp' > /dev/null 2>&1 && echo running || echo not-running
+      register: r_proc_satellite
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set satellitemcp process status fact
+      ansible.builtin.set_fact:
+        _proc_satellite_ok: "{{ (r_proc_satellite.stdout | default('not-running')) == 'running' }}"
+
+    # -------------------------------------------------------------------------
+    # Check 11 — Lightspeed MCP server (lightspeedmcp) process running
+    # -------------------------------------------------------------------------
+    - name: Check lightspeedmcp process running
+      ansible.builtin.shell: pgrep -f 'lightspeedmcp' > /dev/null 2>&1 && echo running || echo not-running
+      register: r_proc_lightspeed
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set lightspeedmcp process status fact
+      ansible.builtin.set_fact:
+        _proc_lightspeed_ok: "{{ (r_proc_lightspeed.stdout | default('not-running')) == 'running' }}"
+
+    # -------------------------------------------------------------------------
+    # Check 12 — RHEL MCP server (rhel-mcp-server) process running
+    # -------------------------------------------------------------------------
+    - name: Check rhel-mcp-server process running
+      ansible.builtin.shell: pgrep -f 'rhel-mcp-server' > /dev/null 2>&1 && echo running || echo not-running
+      register: r_proc_rhel
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set rhel-mcp-server process status fact
+      ansible.builtin.set_fact:
+        _proc_rhel_ok: "{{ (r_proc_rhel.stdout | default('not-running')) == 'running' }}"
+
+    # -------------------------------------------------------------------------
+    # Report
+    # -------------------------------------------------------------------------
+    - name: Report solve status
       ansible.builtin.debug:
-        msg: "Solve logic goes here"
+        msg: |
+          goose binary present/executable:        {{ 'ok' if _goose_bin_ok else 'NOT ok' }}
+          rhel-1-{{ guid }} SSH reachable:        {{ 'ok' if _rhel1_ssh_ok else 'NOT ok' }}
+          rhel-2-{{ guid }} SSH reachable:        {{ 'ok' if _rhel2_ssh_ok else 'NOT ok' }}
+          rhel-3-{{ guid }} SSH reachable:        {{ 'ok' if _rhel3_ssh_ok else 'NOT ok' }}
+          rhel-4-{{ guid }} SSH reachable:        {{ 'ok' if _rhel4_ssh_ok else 'NOT ok' }}
+          postgresql active on rhel-1-{{ guid }}: {{ 'ok' if _pg_rhel1_ok else 'NOT ok — service is ' + (r_pg_rhel1.stdout | default('unknown') | trim) }}
+          postgresql active on rhel-2-{{ guid }}: {{ 'ok' if _pg_rhel2_ok else 'NOT ok — service is ' + (r_pg_rhel2.stdout | default('unknown') | trim) }}
+          postgresql active on rhel-3-{{ guid }}: {{ 'ok' if _pg_rhel3_ok else 'NOT ok — service is ' + (r_pg_rhel3.stdout | default('unknown') | trim) }}
+          postgresql active on rhel-4-{{ guid }}: {{ 'ok' if _pg_rhel4_ok else 'NOT ok — service is ' + (r_pg_rhel4.stdout | default('unknown') | trim) }}
+          satellitemcp process running:           {{ 'ok' if _proc_satellite_ok else 'NOT ok' }}
+          lightspeedmcp process running:          {{ 'ok' if _proc_lightspeed_ok else 'NOT ok' }}
+          rhel-mcp-server process running:        {{ 'ok' if _proc_rhel_ok else 'NOT ok' }}

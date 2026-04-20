@@ -178,3 +178,10 @@ This will end the Goose session and return you to the terminal prompt.
 That finished up the various exercises that Infinicorp had for you. 
 Continue onto the Recap module.
 
+
+++++
+<div class="solve-button-placeholder" data-module="module-06"></div>
+++++
+++++
+<div class="validate-button-placeholder" data-module="module-06"></div>
+++++

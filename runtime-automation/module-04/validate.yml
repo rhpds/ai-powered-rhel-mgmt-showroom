@@ -1,16 +1,74 @@
 ---
-# Module 04 — Validation playbook
-# Multi-task validation — each task outputs ✅ or ❌
+# Module 04 Validation — Goose AI Session Pre-conditions
+#
+# Coverage note: Module 04 consists entirely of interactive Goose AI prompt
+# sessions (security posture report, CVE counts, remediation plans, CIS
+# compliance). These steps are non-deterministic and produce no durable
+# OS-level artefacts that can be verified programmatically.
+#
+# What CAN be verified:
+#   Task 1: Goose binary is present and executable on mcp-{guid}
+#   Task 2: No orphaned Goose process is running (clean session state)
 
-- name: Validate Module 04
-  hosts: bastion
+- name: Module 04 Validation — add node to inventory
+  hosts: localhost
+  connection: local
   gather_facts: false
-  become: true
-  vars:
-    ansible_user: "{{ bastion_user | default('lab-user') }}"
   tasks:
-    - name: Placeholder — replace with actual validation checks
+    - name: Add mcp node to inventory
+      ansible.builtin.add_host:
+        name: node
+        ansible_host: "mcp-{{ guid | default('') }}"
+        ansible_user: lab-user
+        ansible_ssh_private_key_file: /app/.ssh/id_rsa
+        ansible_ssh_common_args: "-F /app/.ssh/config"
+
+- name: Module 04 Validation — Goose session pre-conditions
+  hosts: node
+  gather_facts: false
+  vars:
+    student_user: "{{ user | default('') }}"
+    guid: "{{ guid | default('') }}"
+
+  tasks:
+
+    # -------------------------------------------------------
+    # Check 1 — Goose binary is present and executable
+    # -------------------------------------------------------
+    - name: Check Goose binary is present and executable
+      ansible.builtin.command: which goose
+      register: r_goose_binary
+      changed_when: false
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Check 2 — No orphaned Goose process is running
+    # pgrep exits 0 when a process IS found (bad state).
+    # We want rc != 0 (no process running).
+    # -------------------------------------------------------
+    - name: Check no orphaned Goose process is running
+      ansible.builtin.command: pgrep -x goose
+      register: r_goose_proc
+      changed_when: false
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Build task result facts
+    # -------------------------------------------------------
+    - name: Build task results
+      ansible.builtin.set_fact:
+        _task1_ok: "{{ r_goose_binary.rc | default(1) == 0 }}"
+        _task2_ok: "{{ r_goose_proc.rc | default(0) != 0 }}"
+
+    # -------------------------------------------------------
+    # Validate all tasks
+    # -------------------------------------------------------
+    - name: Validate all tasks
       validation_check:
-        check: true
-        pass_msg: "✅ Validation placeholder passes"
-        error_msg: "❌ Validation not yet implemented"
+        check: "{{ _task1_ok and _task2_ok }}"
+        pass_msg: |
+          Task 1: goose binary is present and executable on mcp-{{ guid }}
+          Task 2: no orphaned Goose process is running — session state is clean
+        error_msg: |
+          {{ 'Task 1 ok' if _task1_ok else 'Task 1 FAILED — goose binary not found in PATH. Verify the lab environment is provisioned correctly or contact your instructor.' }}
+          {{ 'Task 2 ok' if _task2_ok else 'Task 2 FAILED — an orphaned Goose process is still running. Run: pkill -TERM -x goose — then click Validate again.' }}

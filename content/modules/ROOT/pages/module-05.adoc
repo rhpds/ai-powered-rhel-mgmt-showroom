@@ -122,3 +122,10 @@ This will end the Goose session and return you to the terminal prompt.
 
 It looks like you’ve gathered some really good information - continue onto the next module.
 
+
+++++
+<div class="solve-button-placeholder" data-module="module-05"></div>
+++++
+++++
+<div class="validate-button-placeholder" data-module="module-05"></div>
+++++

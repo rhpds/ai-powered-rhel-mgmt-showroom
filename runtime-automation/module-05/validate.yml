@@ -1,16 +1,88 @@
 ---
-# Module 05 — Validation playbook
-# Multi-task validation — each task outputs ✅ or ❌
+# Module 05 Validation — Goose AI Session (RHEL Lifecycle Lab)
+#
+# Checks (all run on mcp-{guid} as lab-user via SSH):
+#   Task 1: Goose binary is present and executable
+#   Task 2: Lightspeed MCP server (lightspeedmcp) process is running
+#   Task 3: No orphaned Goose session is running (block-01 guard + block-05 /quit completed)
+#
+# blocks 02-04 (AI prompts): non-deterministic — not validated.
+#
+# The durable end-state after a completed module-05 is:
+#   - goose binary available (prerequisite for the session to have worked)
+#   - lightspeedmcp process running (MCP server that Goose connects to)
+#   - goose process absent (session was started AND cleanly quit with /quit)
 
-- name: Validate Module 05
-  hosts: bastion
+- name: Module 05 Validation — add mcp node to inventory
+  hosts: localhost
+  connection: local
   gather_facts: false
-  become: true
-  vars:
-    ansible_user: "{{ bastion_user | default('lab-user') }}"
   tasks:
-    - name: Placeholder — replace with actual validation checks
+    - name: Add mcp node to inventory
+      ansible.builtin.add_host:
+        name: node
+        ansible_host: "mcp-{{ guid | default('') }}"
+        ansible_user: lab-user
+        ansible_ssh_private_key_file: /app/.ssh/id_rsa
+        ansible_ssh_common_args: "-F /app/.ssh/config"
+
+- name: Module 05 Validation — Goose session lifecycle verification
+  hosts: node
+  gather_facts: false
+  vars:
+    student_user: "{{ user | default('') }}"
+    guid: "{{ guid | default('') }}"
+
+  tasks:
+
+    # -------------------------------------------------------
+    # Check 1 — Goose binary is present and executable
+    # -------------------------------------------------------
+    - name: Check goose binary present and executable
+      ansible.builtin.shell: command -v goose && goose --version 2>&1 | head -1
+      register: r_goose_bin
+      changed_when: false
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Check 2 — lightspeedmcp process is running on the MCP VM
+    # -------------------------------------------------------
+    - name: Check lightspeedmcp process running
+      ansible.builtin.shell: pgrep -f 'lightspeedmcp' > /dev/null 2>&1 && echo running || echo not-running
+      register: r_proc_lightspeed
+      changed_when: false
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Check 3 — No Goose session process is running
+    # (proves: block-01 guard ran AND block-05 /quit completed)
+    # -------------------------------------------------------
+    - name: Check goose process is absent (session started and quit cleanly)
+      ansible.builtin.shell: pgrep -f 'goose' > /dev/null 2>&1 && echo running || echo not-running
+      register: r_goose_proc
+      changed_when: false
+      ignore_errors: true
+
+    # -------------------------------------------------------
+    # Build task result facts
+    # -------------------------------------------------------
+    - name: Build task results
+      ansible.builtin.set_fact:
+        _task1_ok: "{{ r_goose_bin.rc | default(1) == 0 }}"
+        _task2_ok: "{{ (r_proc_lightspeed.stdout | default('not-running') | trim) == 'running' }}"
+        _task3_ok: "{{ (r_goose_proc.stdout | default('not-running') | trim) == 'not-running' }}"
+
+    # -------------------------------------------------------
+    # Validate all tasks
+    # -------------------------------------------------------
+    - name: Validate all tasks
       validation_check:
-        check: true
-        pass_msg: "✅ Validation placeholder passes"
-        error_msg: "❌ Validation not yet implemented"
+        check: "{{ _task1_ok and _task2_ok and _task3_ok }}"
+        pass_msg: |
+          Task 1: goose binary is present and executable on mcp-{{ guid }}
+          Task 2: lightspeedmcp process is running on mcp-{{ guid }}
+          Task 3: goose session is not running — session was started and quit cleanly with /quit
+        error_msg: |
+          {{ 'Task 1 ok' if _task1_ok else 'Task 1 FAILED — goose binary not found or not executable on mcp-' + guid + '. Contact your instructor.' }}
+          {{ 'Task 2 ok' if _task2_ok else 'Task 2 FAILED — lightspeedmcp process is not running on mcp-' + guid + '. Click Solve or restart the MCP service.' }}
+          {{ 'Task 3 ok' if _task3_ok else 'Task 3 FAILED — a goose process is still running. In your terminal run: tmux send-keys -t main:0.0 "/quit" Enter — then validate again.' }}

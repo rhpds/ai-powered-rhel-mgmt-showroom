@@ -1,14 +1,145 @@
 ---
-# Module 05 — Solve playbook
-# Automates all student tasks for this module
+# Module 05 Solve — Goose AI Session (RHEL Lifecycle Lab)
+#
+# What this playbook does:
+#   1. Adds the MCP node (mcp-{guid}) to the Ansible inventory
+#   2. Kills any orphaned goose process from a prior module run (idempotency)
+#   3. Ensures a tmux session is running on the MCP node
+#   4. block-01: Starts a Goose AI session inside the tmux pane
+#   5. Waits for Goose to initialise
+#   6. blocks 02-04: Natural-language AI prompts — SKIP (non-deterministic LLM output)
+#   7. block-05: Sends /quit to exit the Goose session cleanly
+#   8. Verifies:
+#      - Goose started (pgrep goose returned a PID after block-01)
+#      - Goose exited cleanly (pgrep goose is empty after /quit)
+#      - Lightspeed MCP server process is reachable from the MCP VM
 
-- name: Solve Module 05
-  hosts: bastion
+- name: Module 05 Solve — add mcp node to inventory
+  hosts: localhost
+  connection: local
   gather_facts: false
-  become: true
-  vars:
-    ansible_user: "{{ bastion_user | default('lab-user') }}"
   tasks:
-    - name: Placeholder — replace with actual solve tasks
+    - name: Add mcp node to inventory
+      ansible.builtin.add_host:
+        name: node
+        ansible_host: "mcp-{{ guid | default('') }}"
+        ansible_user: lab-user
+        ansible_ssh_private_key_file: /app/.ssh/id_rsa
+        ansible_ssh_common_args: "-F /app/.ssh/config"
+
+- name: Module 05 Solve — Goose session start and quit
+  hosts: node
+  gather_facts: false
+  vars:
+    guid: "{{ guid | default('') }}"
+
+  tasks:
+
+    # -------------------------------------------------------------------------
+    # Idempotency guard — kill any orphaned goose process from a prior run
+    # -------------------------------------------------------------------------
+    - name: Kill any orphaned goose process before starting
+      ansible.builtin.shell: |
+        if pgrep -f 'goose' > /dev/null 2>&1; then
+          pkill -f 'goose' 2>/dev/null || true
+          sleep 2
+        fi
+        echo done
+      register: r_kill_orphan
+      changed_when: false
+      ignore_errors: true
+
+    # -------------------------------------------------------------------------
+    # Ensure a tmux session exists (idempotent)
+    # -------------------------------------------------------------------------
+    - name: Check if tmux session already running
+      ansible.builtin.shell: tmux list-sessions 2>/dev/null | grep -q '.' && echo running || echo not-running
+      register: r_tmux_check
+      changed_when: false
+      ignore_errors: true
+
+    - name: Start detached tmux session if not running
+      ansible.builtin.shell: tmux new-session -d -s main 2>/dev/null || true
+      when: r_tmux_check.stdout | default('not-running') == 'not-running'
+      ignore_errors: true
+
+    # -------------------------------------------------------------------------
+    # block-01: Start Goose AI session
+    # -------------------------------------------------------------------------
+    - name: "block-01: Send 'goose session' to tmux pane"
+      ansible.builtin.shell: "tmux send-keys -t main:0.0 'goose session' Enter"
+      ignore_errors: true
+
+    - name: Wait for Goose to initialise (connect to MCP, load tools)
+      ansible.builtin.pause:
+        seconds: 10
+
+    # -------------------------------------------------------------------------
+    # Verify goose started (pgrep after block-01)
+    # -------------------------------------------------------------------------
+    - name: Check goose process is running after start
+      ansible.builtin.shell: pgrep -f 'goose' 2>/dev/null
+      register: r_goose_pid
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set goose started fact
+      ansible.builtin.set_fact:
+        _goose_started: "{{ r_goose_pid.rc | default(1) == 0 and r_goose_pid.stdout | default('') | length > 0 }}"
+
+    # -------------------------------------------------------------------------
+    # blocks 02-04: Natural-language AI prompts — SKIP
+    # block-02: "Provide a simple summary of RHEL versions 9 and older..."
+    # block-03: "Build me an executive summary of our fleet risk posture..."
+    # block-04: "Cross-reference our upcoming deprecations with lifecycle data..."
+    # Reason: Non-deterministic LLM output; lab guide itself warns output may vary.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # block-05: Send /quit to exit the Goose session
+    # -------------------------------------------------------------------------
+    - name: "block-05: Send '/quit' to exit Goose session"
+      ansible.builtin.shell: "tmux send-keys -t main:0.0 '/quit' Enter"
+      ignore_errors: true
+
+    - name: Wait for Goose to exit cleanly
+      ansible.builtin.pause:
+        seconds: 5
+
+    # -------------------------------------------------------------------------
+    # Verify goose exited (pgrep should return empty after /quit)
+    # -------------------------------------------------------------------------
+    - name: Check goose process is gone after /quit
+      ansible.builtin.shell: pgrep -f 'goose' 2>/dev/null || true
+      register: r_goose_gone
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set goose exited fact
+      ansible.builtin.set_fact:
+        _goose_exited: "{{ r_goose_gone.stdout | default('') | trim | length == 0 }}"
+
+    # -------------------------------------------------------------------------
+    # Verify Lightspeed MCP server process is running on the MCP VM
+    # -------------------------------------------------------------------------
+    - name: Check lightspeedmcp process is running
+      ansible.builtin.shell: pgrep -f 'lightspeedmcp' > /dev/null 2>&1 && echo running || echo not-running
+      register: r_proc_lightspeed
+      changed_when: false
+      ignore_errors: true
+
+    - name: Set lightspeedmcp process status fact
+      ansible.builtin.set_fact:
+        _lightspeed_ok: "{{ (r_proc_lightspeed.stdout | default('not-running')) == 'running' }}"
+
+    # -------------------------------------------------------------------------
+    # Report
+    # -------------------------------------------------------------------------
+    - name: Report solve status
       ansible.builtin.debug:
-        msg: "Solve logic goes here"
+        msg: |
+          Orphaned goose process cleared:  ok
+          Goose started (block-01):        {{ 'ok' if _goose_started else 'NOT ok — goose did not start' }}
+          Goose exited cleanly (block-05): {{ 'ok' if _goose_exited else 'NOT ok — goose process still present' }}
+          Lightspeed MCP server running:   {{ 'ok' if _lightspeed_ok else 'NOT ok — lightspeedmcp process not found' }}
+          blocks 02-04 (AI prompts):       SKIPPED — non-deterministic LLM output, not automatable

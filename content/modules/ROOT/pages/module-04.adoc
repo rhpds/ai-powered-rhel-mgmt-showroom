@@ -203,3 +203,10 @@ This completes your review of the security posture of your Infinicorp systems.
 
 Let’s look more at planning and reporting in the next module.
 
+
+++++
+<div class="solve-button-placeholder" data-module="module-04"></div>
+++++
+++++
+<div class="validate-button-placeholder" data-module="module-04"></div>
+++++

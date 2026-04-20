@@ -1,14 +1,87 @@
 ---
-# Module 04 — Solve playbook
-# Automates all student tasks for this module
+# module-04 — AI-Powered RHEL Management: Solve Playbook
+#
+# Coverage: 0%
+# All student steps are interactive Goose AI prompt sessions.
+# These are non-deterministic and cannot be automated.
+#
+# This playbook only performs pre-condition hygiene:
+#   1. Confirms Goose binary is present on the lab host.
+#   2. Kills any orphaned Goose process from a prior abandoned session
+#      so the student starts module-04 with a clean slate.
+#
+# No Goose prompts are issued. No OS state is changed beyond killing a
+# stale process (if one exists).
 
-- name: Solve Module 04
-  hosts: bastion
+- name: Module 04 Solve — add node to inventory
+  hosts: localhost
+  connection: local
   gather_facts: false
-  become: true
-  vars:
-    ansible_user: "{{ bastion_user | default('lab-user') }}"
   tasks:
-    - name: Placeholder — replace with actual solve tasks
+    - name: Add mcp node to inventory
+      ansible.builtin.add_host:
+        name: node
+        ansible_host: "mcp-{{ guid | default('') }}"
+        ansible_user: lab-user
+        ansible_ssh_private_key_file: /app/.ssh/id_rsa
+        ansible_ssh_common_args: "-F /app/.ssh/config"
+
+- name: Module 04 Solve
+  hosts: node
+  gather_facts: false
+  tasks:
+
+    # ------------------------------------------------------------------
+    # 1. Verify Goose binary is available
+    # ------------------------------------------------------------------
+    - name: Check Goose binary exists
+      ansible.builtin.command: which goose
+      register: r_goose_binary
+      changed_when: false
+      failed_when: false
+
+    - name: Record binary availability
+      ansible.builtin.set_fact:
+        _goose_binary_ok: "{{ r_goose_binary.rc == 0 }}"
+
+    # ------------------------------------------------------------------
+    # 2. Kill any orphaned Goose session from a prior run
+    #    (idempotent: pkill exits 1 if no process found — we ignore that)
+    # ------------------------------------------------------------------
+    - name: Kill orphaned Goose session if running
+      ansible.builtin.command: pkill -TERM -x goose
+      register: r_pkill
+      changed_when: r_pkill.rc == 0
+      failed_when: false
+
+    - name: Wait briefly for process to exit
+      ansible.builtin.pause:
+        seconds: 2
+      when: r_pkill.rc == 0
+
+    # ------------------------------------------------------------------
+    # 3. Confirm no Goose process remains
+    # ------------------------------------------------------------------
+    - name: Check no Goose process is running
+      ansible.builtin.command: pgrep -x goose
+      register: r_pgrep
+      changed_when: false
+      failed_when: false
+
+    - name: Record clean-session fact
+      ansible.builtin.set_fact:
+        _goose_not_running: "{{ r_pgrep.rc != 0 }}"
+
+    # ------------------------------------------------------------------
+    # 4. Report
+    # ------------------------------------------------------------------
+    - name: Report solve status
       ansible.builtin.debug:
-        msg: "Solve logic goes here"
+        msg: |
+          Goose binary available : {{ 'ok' if _goose_binary_ok else 'NOT ok — goose not found in PATH' }}
+          No orphaned Goose session : {{ 'ok' if _goose_not_running else 'NOT ok — goose process still running' }}
+
+          NOTE: Module 04 consists entirely of interactive Goose AI prompt sessions
+          (security posture report, CVE counts, remediation plans, CIS compliance).
+          These steps are non-deterministic and cannot be automated.
+          The student must complete them manually in the lab UI.
