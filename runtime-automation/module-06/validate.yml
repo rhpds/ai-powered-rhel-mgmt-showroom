@@ -18,7 +18,7 @@
       ansible.builtin.add_host:
         name: node
         ansible_host: "mcp-{{ lookup('ansible.builtin.env', 'GUID') }}"
-        ansible_user: lab-user
+        ansible_user: "{{ lookup('ansible.builtin.env', 'BASTION_SSH_USER_NAME') }}"
         ansible_ssh_private_key_file: /app/.ssh/id_rsa
         ansible_ssh_common_args: "-F /app/.ssh/config"
 
