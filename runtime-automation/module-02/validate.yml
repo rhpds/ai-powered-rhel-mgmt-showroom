@@ -17,7 +17,7 @@
     - name: Add mcp node to inventory
       ansible.builtin.add_host:
         name: node
-        ansible_host: "mcp-{{ guid | default('') }}"
+        ansible_host: "mcp-{{ lookup('ansible.builtin.env', 'GUID') }}"
         ansible_user: lab-user
         ansible_ssh_private_key_file: /app/.ssh/id_rsa
         ansible_ssh_common_args: "-F /app/.ssh/config"
@@ -26,12 +26,12 @@
   hosts: node
   gather_facts: false
   vars:
-    student_user: "{{ user | default('') }}"
-    # satellite_password is injected as an extravar at runtime
-    satellite_password: "{{ satellite_password | default('') }}"
-    guid: "{{ guid | default('') }}"
-    satellite_host: "satellite-{{ guid }}.apps.ocpvdev01.rhdp.net"
-    rhel3_host: "rhel-3-{{ guid }}"
+    student_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
+    satellite_password: "{{ lookup('ansible.builtin.env', 'SATELLITE_PASSWORD') }}"
+    satellite_username: "{{ lookup('ansible.builtin.env', 'SATELLITE_USERNAME') }}"
+    guid: "{{ lookup('ansible.builtin.env', 'GUID') }}"
+    satellite_url: "{{ lookup('ansible.builtin.env', 'SATELLITE_URL') }}"
+    rhel3_host: "rhel-3-{{ lookup('ansible.builtin.env', 'GUID') }}"
 
   tasks:
 
@@ -118,7 +118,7 @@
     # Check 5 — Satellite API reachable (HTTP 200, host count > 0)
     # -------------------------------------------------------
     - name: Query Satellite API for hosts
-      ansible.builtin.shell: "curl -sk -u admin:{{ satellite_password }} https://{{ satellite_host }}/api/hosts -o /tmp/sat_hosts_validate.json -w '%{http_code}'"
+      ansible.builtin.shell: "curl -sk -u {{ satellite_username }}:{{ satellite_password }} {{ satellite_url }}/api/hosts -o /tmp/sat_hosts_validate.json -w '%{http_code}'"
       register: r_sat_api
       changed_when: false
       ignore_errors: true
@@ -187,5 +187,5 @@
           {{ 'Task 2 ok' if _task2_ok else 'Task 2 FAILED — goose binary not found or not executable. Contact your instructor.' }}
           {{ 'Task 3 ok' if _task3_ok else 'Task 3 FAILED — goose config is missing one or more MCP server entries (lightspeedmcp, satellitemcp, rhel-mcp-server). Check ~/.config/goose/config.yaml or ~/.goose/config.yaml.' }}
           {{ 'Task 4 ok' if _task4_ok else 'Task 4 FAILED — one or more MCP server processes are not running (lightspeedmcp, satellitemcp, rhel-mcp-server). Try restarting the MCP services or click Solve.' }}
-          {{ 'Task 5 ok' if _task5_ok else 'Task 5 FAILED — Satellite API did not return hosts. Verify satellite_password is correct and satellite-' + guid + '.apps.ocpvdev01.rhdp.net is reachable.' }}
+          {{ 'Task 5 ok' if _task5_ok else 'Task 5 FAILED — Satellite API did not return hosts. Verify SATELLITE_PASSWORD env var is set and ' + satellite_url + ' is reachable.' }}
           {{ 'Task 6 ok' if _task6_ok else 'Task 6 FAILED — rhel-3-' + guid + ' is not reachable via SSH. Verify the host is running and SSH keys are in place.' }}

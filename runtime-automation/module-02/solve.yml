@@ -30,14 +30,11 @@
   hosts: node
   gather_facts: false
   vars:
-    # satellite_password is injected as an extravar at runtime
-    satellite_password: "{{ lookup('ansible.builtin.env', SATELLITE_PASSWORD' ) }}"
+    satellite_password: "{{ lookup('ansible.builtin.env', 'SATELLITE_PASSWORD') }}"
+    satellite_username: "{{ lookup('ansible.builtin.env', 'SATELLITE_USERNAME') }}"
     guid: "{{ lookup('ansible.builtin.env', 'GUID') }}"
-    satellite_host: "satellite-{{ lookup('ansible.builtin.env', 'GUID') }}.apps.ocpvdev01.rhdp.net"
+    satellite_url: "{{ lookup('ansible.builtin.env', 'SATELLITE_URL') }}"
     rhel3_host: "rhel-3-{{ lookup('ansible.builtin.env', 'GUID') }}"
-    goose_config_paths:
-      - /home/lab-user/.config/goose/config.yaml
-      - /home/lab-user/.goose/config.yaml
 
   tasks:
 
@@ -198,7 +195,7 @@
     # Verification — Satellite API reachable (HTTP 200, count > 0)
     # -------------------------------------------------------------------------
     - name: Query Satellite API for hosts
-      ansible.builtin.shell: "curl -sk -u admin:{{ satellite_password }} https://{{ satellite_host }}/api/hosts -o /tmp/sat_hosts.json -w '%{http_code}'"
+      ansible.builtin.shell: "curl -sk -u {{ satellite_username }}:{{ satellite_password }} {{ satellite_url }}/api/hosts -o /tmp/sat_hosts.json -w '%{http_code}'"
       register: r_sat_api
       changed_when: false
       ignore_errors: true
@@ -249,5 +246,5 @@
           lightspeedmcp process running:     {{ 'ok' if _proc_lightspeed_ok else 'NOT ok' }}
           satellitemcp process running:      {{ 'ok' if _proc_satellite_ok else 'NOT ok' }}
           rhel-mcp-server process running:   {{ 'ok' if _proc_rhel_ok else 'NOT ok' }}
-          Satellite API reachable (hosts>0): {{ 'ok' if _sat_api_ok else 'NOT ok (check satellite_password extravar)' }}
+          Satellite API reachable (hosts>0): {{ 'ok' if _sat_api_ok else 'NOT ok (check SATELLITE_PASSWORD env var)' }}
           rhel-3-{{ guid }} SSH reachable:   {{ 'ok' if _rhel3_ssh_ok else 'NOT ok' }}

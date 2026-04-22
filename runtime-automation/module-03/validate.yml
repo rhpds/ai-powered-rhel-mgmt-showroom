@@ -16,7 +16,7 @@
     - name: Add mcp node to inventory
       ansible.builtin.add_host:
         name: node
-        ansible_host: "mcp-{{ guid | default('') }}"
+        ansible_host: "mcp-{{ lookup('ansible.builtin.env', 'GUID') }}"
         ansible_user: lab-user
         ansible_ssh_private_key_file: /app/.ssh/id_rsa
         ansible_ssh_common_args: "-F /app/.ssh/config"
@@ -25,8 +25,8 @@
   hosts: node
   gather_facts: false
   vars:
-    student_user: "{{ user | default('') }}"
-    guid: "{{ guid | default('') }}"
+    student_user: "{{ lookup('ansible.builtin.env', 'USER') }}"
+    guid: "{{ lookup('ansible.builtin.env', 'GUID') }}"
     rhel1_host: "rhel-1-{{ guid }}"
     rhel2_host: "rhel-2-{{ guid }}"
     rhel3_host: "rhel-3-{{ guid }}"
