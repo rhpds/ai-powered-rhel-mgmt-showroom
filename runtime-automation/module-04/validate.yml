@@ -50,7 +50,7 @@
       ansible.builtin.command: pgrep -f "[g]oose session"
       register: r_goose_proc
       changed_when: false
-      ignore_errors: true
+      failed_when: false
 
     # -------------------------------------------------------
     # Build task result facts
