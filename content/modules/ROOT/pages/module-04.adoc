@@ -205,6 +205,7 @@ Let’s look more at planning and reporting in the next module.
 
 
 ifeval::["{run_e2e_load_test}" == "true"]
+=====
 .End-to-End Validation (RHDP Only) ✅
 [%collapsible]
 ====
@@ -215,4 +216,5 @@ ifeval::["{run_e2e_load_test}" == "true"]
 <div class="validate-button-placeholder" data-module="module-04"></div>
 ++++
 ====
+=====
 endif::[]

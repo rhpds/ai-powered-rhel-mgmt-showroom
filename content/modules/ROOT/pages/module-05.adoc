@@ -124,6 +124,7 @@ It looks like you’ve gathered some really good information - continue onto the
 
 
 ifeval::["{run_e2e_load_test}" == "true"]
+=====
 .End-to-End Validation (RHDP Only) ✅
 [%collapsible]
 ====
@@ -134,4 +135,5 @@ ifeval::["{run_e2e_load_test}" == "true"]
 <div class="validate-button-placeholder" data-module="module-05"></div>
 ++++
 ====
+=====
 endif::[]
