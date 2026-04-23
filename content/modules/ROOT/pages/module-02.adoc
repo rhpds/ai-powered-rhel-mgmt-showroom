@@ -238,14 +238,16 @@ Now click `+Log In+`.
 After running this series of checks you now know that the various MCP servers are working in your environment and you’re ready to dig in a little deeper. 
 Continue to the next module.
 
-////
-ifeval::["{showroom_antora_enable_dev_mode}" == "true"]
-endif::[]
-
-////
+ifeval::["{run_e2e_load_test}" == "true"]
+.End-to-End Validation (RHDP Only) ✅
+[%collapsible]
+====
 ++++
 <div class="solve-button-placeholder" data-module="module-02"></div>
 ++++
 ++++
 <div class="validate-button-placeholder" data-module="module-02"></div>
 ++++
+====
+endif::[]
+
