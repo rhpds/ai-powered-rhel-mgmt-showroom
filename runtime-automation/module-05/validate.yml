@@ -1,7 +1,7 @@
 ---
 # Module 05 Validation — Goose AI Session (RHEL Lifecycle Lab)
 #
-# Checks (all run on mcp-{guid} as lab-user via SSH):
+# Checks (all run on mcp-{{ guid }} as lab-user via SSH):
 #   Task 1: Goose binary is present and executable
 #   Task 2: lightspeedmcp extension is configured in goose config
 #           (lightspeedmcp runs as a stdio subprocess only during an active goose session;

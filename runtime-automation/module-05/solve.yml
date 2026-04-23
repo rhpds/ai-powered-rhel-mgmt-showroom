@@ -2,7 +2,7 @@
 # Module 05 Solve — Goose AI Session (RHEL Lifecycle Lab)
 #
 # What this playbook does:
-#   1. Adds the MCP node (mcp-{guid}) to the Ansible inventory
+#   1. Adds the MCP node (mcp-{{ guid }}) to the Ansible inventory
 #   2. Kills any orphaned goose process from a prior module run (idempotency)
 #   3. Ensures a tmux session is running on the MCP node
 #   4. block-01: Starts a Goose AI session inside the tmux pane

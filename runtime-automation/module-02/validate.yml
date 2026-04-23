@@ -1,13 +1,13 @@
 ---
 # Module 02 Validation — Verifying connectivity to the MCP Servers
 #
-# Checks (all run on mcp-{guid} as lab-user via SSH):
+# Checks (all run on mcp-{{ guid }} as lab-user via SSH):
 #   Task 1: tmux session is running
 #   Task 2: goose binary is present and executable
 #   Task 3: goose config contains lightspeedmcp, satellitemcp, rhel-mcp-server entries
 #   Task 4: lightspeedmcp, satellitemcp, rhel-mcp-server processes are running
 #   Task 5: Satellite API returns HTTP 200 with host count > 0
-#   Task 6: rhel-3-{guid} is reachable via SSH
+#   Task 6: rhel-3-{{ guid }} is reachable via SSH
 
 - name: Module 02 Validation — add node to inventory
   hosts: localhost
@@ -133,10 +133,10 @@
       when: satellite_password | length > 0 and (r_sat_api.stdout | default('')) == '200'
 
     # -------------------------------------------------------
-    # Check 6 — rhel-3-{guid} reachable via SSH from mcp node
+    # Check 6 — rhel-3-{{ guid }} reachable via SSH from mcp node
     # Uses mcp node's own SSH key (~/.ssh/p5s2gkey.pem) and config
     # -------------------------------------------------------
-    - name: Check rhel-3-{guid} SSH reachable from mcp node
+    - name: Check rhel-3-{{ guid }} SSH reachable from mcp node
       ansible.builtin.shell: "ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10 {{ rhel3_host }} 'echo ssh-ok' 2>&1"
       register: r_rhel3_ssh
       changed_when: false

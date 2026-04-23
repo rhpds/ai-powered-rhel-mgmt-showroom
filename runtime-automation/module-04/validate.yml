@@ -7,7 +7,7 @@
 # OS-level artefacts that can be verified programmatically.
 #
 # What CAN be verified:
-#   Task 1: Goose binary is present and executable on mcp-{guid}
+#   Task 1: Goose binary is present and executable on mcp-{{ guid }}
 #   Task 2: No orphaned Goose process is running (clean session state)
 
 - name: Module 04 Validation — add node to inventory

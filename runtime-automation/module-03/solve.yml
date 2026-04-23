@@ -5,10 +5,10 @@
 #            not automatable). This playbook verifies infrastructure prerequisites only.
 #
 # What this playbook verifies:
-#   1. Goose binary is available on mcp-{guid}
-#   2. rhel-1-{guid} through rhel-4-{guid} are reachable via SSH from the mcp node
-#   3. PostgreSQL service is active on rhel-1-{guid} and rhel-2-{guid}
-#   4. PostgreSQL service is active on rhel-3-{guid} and rhel-4-{guid}
+#   1. Goose binary is available on mcp-{{ guid }}
+#   2. rhel-1-{{ guid }} through rhel-4-{{ guid }} are reachable via SSH from the mcp node
+#   3. PostgreSQL service is active on rhel-1-{{ guid }} and rhel-2-{{ guid }}
+#   4. PostgreSQL service is active on rhel-3-{{ guid }} and rhel-4-{{ guid }}
 #   5. Satellite MCP server (satellitemcp) process is running on mcp node
 #   6. Lightspeed MCP server (lightspeedmcp) process is running on mcp node
 #   7. RHEL MCP server (rhel-mcp-server) process is running on mcp node
@@ -56,9 +56,9 @@
         _goose_bin_ok: "{{ r_goose_bin.rc | default(1) == 0 }}"
 
     # -------------------------------------------------------------------------
-    # Check 2 — rhel-1-{guid} reachable via SSH from mcp node
+    # Check 2 — rhel-1-{{ guid }} reachable via SSH from mcp node
     # -------------------------------------------------------------------------
-    - name: Check rhel-1-{guid} reachable via SSH
+    - name: Check rhel-1-{{ guid }} reachable via SSH
       ansible.builtin.shell: >
         ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
         {{ rhel1_host }} 'echo ssh-ok' 2>&1
@@ -71,9 +71,9 @@
         _rhel1_ssh_ok: "{{ (r_rhel1_ssh.stdout | default('')) is search('ssh-ok') }}"
 
     # -------------------------------------------------------------------------
-    # Check 3 — rhel-2-{guid} reachable via SSH from mcp node
+    # Check 3 — rhel-2-{{ guid }} reachable via SSH from mcp node
     # -------------------------------------------------------------------------
-    - name: Check rhel-2-{guid} reachable via SSH
+    - name: Check rhel-2-{{ guid }} reachable via SSH
       ansible.builtin.shell: >
         ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
         {{ rhel2_host }} 'echo ssh-ok' 2>&1
@@ -86,9 +86,9 @@
         _rhel2_ssh_ok: "{{ (r_rhel2_ssh.stdout | default('')) is search('ssh-ok') }}"
 
     # -------------------------------------------------------------------------
-    # Check 4 — rhel-3-{guid} reachable via SSH from mcp node
+    # Check 4 — rhel-3-{{ guid }} reachable via SSH from mcp node
     # -------------------------------------------------------------------------
-    - name: Check rhel-3-{guid} reachable via SSH
+    - name: Check rhel-3-{{ guid }} reachable via SSH
       ansible.builtin.shell: >
         ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
         {{ rhel3_host }} 'echo ssh-ok' 2>&1
@@ -101,9 +101,9 @@
         _rhel3_ssh_ok: "{{ (r_rhel3_ssh.stdout | default('')) is search('ssh-ok') }}"
 
     # -------------------------------------------------------------------------
-    # Check 5 — rhel-4-{guid} reachable via SSH from mcp node
+    # Check 5 — rhel-4-{{ guid }} reachable via SSH from mcp node
     # -------------------------------------------------------------------------
-    - name: Check rhel-4-{guid} reachable via SSH
+    - name: Check rhel-4-{{ guid }} reachable via SSH
       ansible.builtin.shell: >
         ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
         {{ rhel4_host }} 'echo ssh-ok' 2>&1
@@ -116,9 +116,9 @@
         _rhel4_ssh_ok: "{{ (r_rhel4_ssh.stdout | default('')) is search('ssh-ok') }}"
 
     # -------------------------------------------------------------------------
-    # Check 6 — PostgreSQL active on rhel-1-{guid}
+    # Check 6 — PostgreSQL active on rhel-1-{{ guid }}
     # -------------------------------------------------------------------------
-    - name: Check postgresql active on rhel-1-{guid}
+    - name: Check postgresql active on rhel-1-{{ guid }}
       ansible.builtin.shell: >
         ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
         {{ rhel1_host }} 'systemctl is-active postgresql' 2>&1
@@ -131,9 +131,9 @@
         _pg_rhel1_ok: "{{ (r_pg_rhel1.stdout | default('') | trim) == 'active' }}"
 
     # -------------------------------------------------------------------------
-    # Check 7 — PostgreSQL active on rhel-2-{guid}
+    # Check 7 — PostgreSQL active on rhel-2-{{ guid }}
     # -------------------------------------------------------------------------
-    - name: Check postgresql active on rhel-2-{guid}
+    - name: Check postgresql active on rhel-2-{{ guid }}
       ansible.builtin.shell: >
         ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
         {{ rhel2_host }} 'systemctl is-active postgresql' 2>&1
@@ -146,9 +146,9 @@
         _pg_rhel2_ok: "{{ (r_pg_rhel2.stdout | default('') | trim) == 'active' }}"
 
     # -------------------------------------------------------------------------
-    # Check 8 — PostgreSQL active on rhel-3-{guid}
+    # Check 8 — PostgreSQL active on rhel-3-{{ guid }}
     # -------------------------------------------------------------------------
-    - name: Check postgresql active on rhel-3-{guid}
+    - name: Check postgresql active on rhel-3-{{ guid }}
       ansible.builtin.shell: >
         ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
         {{ rhel3_host }} 'systemctl is-active postgresql' 2>&1
@@ -161,9 +161,9 @@
         _pg_rhel3_ok: "{{ (r_pg_rhel3.stdout | default('') | trim) == 'active' }}"
 
     # -------------------------------------------------------------------------
-    # Check 9 — PostgreSQL active on rhel-4-{guid}
+    # Check 9 — PostgreSQL active on rhel-4-{{ guid }}
     # -------------------------------------------------------------------------
-    - name: Check postgresql active on rhel-4-{guid}
+    - name: Check postgresql active on rhel-4-{{ guid }}
       ansible.builtin.shell: >
         ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10
         {{ rhel4_host }} 'systemctl is-active postgresql' 2>&1

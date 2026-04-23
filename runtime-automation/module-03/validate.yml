@@ -1,11 +1,11 @@
 ---
 # Module 03 Validation — PostgreSQL deployment via Goose AI + MCP servers
 #
-# Checks (all run on mcp-{guid} as lab-user via SSH):
-#   Task 1: goose binary is present and executable on mcp-{guid}
-#   Task 2: rhel-1-{guid} through rhel-4-{guid} reachable via SSH from mcp node
-#   Task 3: PostgreSQL service is active on rhel-1-{guid} and rhel-2-{guid}
-#   Task 4: PostgreSQL service is active on rhel-3-{guid} and rhel-4-{guid}
+# Checks (all run on mcp-{{ guid }} as lab-user via SSH):
+#   Task 1: goose binary is present and executable on mcp-{{ guid }}
+#   Task 2: rhel-1-{{ guid }} through rhel-4-{{ guid }} reachable via SSH from mcp node
+#   Task 3: PostgreSQL service is active on rhel-1-{{ guid }} and rhel-2-{{ guid }}
+#   Task 4: PostgreSQL service is active on rhel-3-{{ guid }} and rhel-4-{{ guid }}
 #   Task 5: satellitemcp, lightspeedmcp, and rhel-mcp-server processes running on mcp node
 
 - name: Module 03 Validation — add mcp node to inventory

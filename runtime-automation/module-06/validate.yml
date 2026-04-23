@@ -1,13 +1,13 @@
 ---
 # Module 06 Validation — AI-Powered RHEL Troubleshooting with Goose
 #
-# Checks (all SSH hops: Ansible runner -> mcp-{guid} -> rhel-2/rhel-3):
-#   Task 1: httpd service is active on rhel-2-{guid}
+# Checks (all SSH hops: Ansible runner -> mcp-{{ guid }} -> rhel-2/rhel-3):
+#   Task 1: httpd service is active on rhel-2-{{ guid }}
 #   Task 2: /etc/httpd/conf/httpd.conf contains "Listen 80" (typo fixed, not LListen)
-#   Task 3: httpd is listening on port 80 on rhel-2-{guid}
-#   Task 4: db-app is in failed/inactive state on rhel-3-{guid} (CORRECT — gatekeeper blocked malicious script)
-#   Task 5: /tmp/.schema_updated marker file is absent on rhel-3-{guid} (script never ran)
-#   Task 6: No lingering goose process on mcp-{guid}
+#   Task 3: httpd is listening on port 80 on rhel-2-{{ guid }}
+#   Task 4: db-app is in failed/inactive state on rhel-3-{{ guid }} (CORRECT — gatekeeper blocked malicious script)
+#   Task 5: /tmp/.schema_updated marker file is absent on rhel-3-{{ guid }} (script never ran)
+#   Task 6: No lingering goose process on mcp-{{ guid }}
 
 - name: Module 06 Validation — add mcp node to inventory
   hosts: localhost
@@ -36,7 +36,7 @@
   tasks:
 
     # -------------------------------------------------------
-    # Check 1 — httpd service is active on rhel-2-{guid}
+    # Check 1 — httpd service is active on rhel-2-{{ guid }}
     # -------------------------------------------------------
     - name: Check httpd service is active on rhel-2
       ansible.builtin.shell: >
@@ -60,7 +60,7 @@
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Check 3 — port 80 is listening on rhel-2-{guid}
+    # Check 3 — port 80 is listening on rhel-2-{{ guid }}
     # -------------------------------------------------------
     - name: Check port 80 is listening on rhel-2
       ansible.builtin.shell: >
@@ -71,7 +71,7 @@
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Check 4 — db-app is in failed/inactive state on rhel-3-{guid}
+    # Check 4 — db-app is in failed/inactive state on rhel-3-{{ guid }}
     # This is the CORRECT outcome — Goose's gatekeeper blocked the
     # malicious update_schema.sh script.  db-app should NOT be active.
     # -------------------------------------------------------
@@ -84,7 +84,7 @@
       ignore_errors: true
 
     # -------------------------------------------------------
-    # Check 5 — /tmp/.schema_updated marker absent on rhel-3-{guid}
+    # Check 5 — /tmp/.schema_updated marker absent on rhel-3-{{ guid }}
     # The malicious update_schema.sh would create this file if it ran.
     # Absence proves the script was never executed.
     # -------------------------------------------------------

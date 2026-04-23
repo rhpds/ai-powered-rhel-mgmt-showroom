@@ -2,7 +2,7 @@
 # Module 02 Solve — Verifying connectivity to the MCP Servers
 #
 # What this playbook does:
-#   1. Ensures a tmux session is running on the mcp node (mcp-{guid}) as lab-user
+#   1. Ensures a tmux session is running on the mcp node (mcp-{{ guid }}) as lab-user
 #   2. Starts a Goose session inside tmux, then immediately quits it
 #      (blocks 03-06 are natural-language AI prompts — non-deterministic, not automatable)
 #   3. Verifies all validation targets:
@@ -11,7 +11,7 @@
 #      - goose config contains three MCP server entries
 #      - lightspeedmcp, satellitemcp, rhel-mcp-server processes running
 #      - Satellite API reachable (HTTP 200 with hosts)
-#      - rhel-3-{guid} host reachable via SSH
+#      - rhel-3-{{ guid }} host reachable via SSH
 
 - name: Module 02 Solve — add node to inventory
   hosts: localhost
@@ -219,10 +219,10 @@
           }}
 
     # -------------------------------------------------------------------------
-    # Verification — rhel-3-{guid} SSH reachable from mcp node
+    # Verification — rhel-3-{{ guid }} SSH reachable from mcp node
     # Uses mcp node's own SSH key (~/.ssh/p5s2gkey.pem) and config
     # -------------------------------------------------------------------------
-    - name: Check rhel-3-{guid} is reachable via SSH from mcp node
+    - name: Check rhel-3-{{ guid }} is reachable via SSH from mcp node
       ansible.builtin.shell: "ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10 {{ rhel3_host }} 'echo ssh-ok' 2>&1"
       register: r_rhel3_ssh
       changed_when: false

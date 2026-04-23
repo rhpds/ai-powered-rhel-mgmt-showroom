@@ -2,14 +2,14 @@
 # Module 06 Solve — AI-Powered RHEL Troubleshooting with Goose
 #
 # What this playbook does:
-#   1. SSH from the mcp node into rhel-2-{guid} and fixes the httpd typo:
+#   1. SSH from the mcp node into rhel-2-{{ guid }} and fixes the httpd typo:
 #      - Changes "LListen 80" -> "Listen 80" anywhere in httpd.conf
 #        (grep-first check makes the sed step idempotent)
 #      - Restarts the httpd service
-#   2. Verifies httpd is active and listening on port 80 on rhel-2-{guid}
-#   3. Verifies db-app remains in failed state on rhel-3-{guid}
+#   2. Verifies httpd is active and listening on port 80 on rhel-2-{{ guid }}
+#   3. Verifies db-app remains in failed state on rhel-3-{{ guid }}
 #      (intentional — Goose's gatekeeper correctly blocked the malicious script)
-#   4. Confirms no lingering goose process on mcp-{guid}
+#   4. Confirms no lingering goose process on mcp-{{ guid }}
 #
 # SKIP blocks (non-automatable — interactive Goose AI session):
 #   block-01: "goose session"     — interactive REPL start
@@ -19,7 +19,7 @@
 #   block-05: "/quit"             — in-session Goose command
 #
 # All SSH hops go:
-#   Ansible runner -> mcp-{guid} (node) -> rhel-2-{guid} or rhel-3-{guid}
+#   Ansible runner -> mcp-{{ guid }} (node) -> rhel-2-{{ guid }} or rhel-3-{{ guid }}
 
 - name: Module 06 Solve — add mcp node to inventory
   hosts: localhost
@@ -47,7 +47,7 @@
   tasks:
 
     # -------------------------------------------------------------------------
-    # Fix 1: Correct the typo in httpd.conf on rhel-2-{guid}
+    # Fix 1: Correct the typo in httpd.conf on rhel-2-{{ guid }}
     # Grep-first: only run sed (and echo 'fixed') when LListen 80 is present.
     # Prints 'skipped' when already correct — makes changed_when truly idempotent.
     # Uses pipe '|' as sed delimiter so slashes in the path do not need escaping.
@@ -64,7 +64,7 @@
       ignore_errors: true
 
     # -------------------------------------------------------------------------
-    # Fix 2: Restart httpd on rhel-2-{guid}
+    # Fix 2: Restart httpd on rhel-2-{{ guid }}
     # Restart is safe to call even when httpd is already running.
     # Only marks changed when the restart command succeeds.
     # -------------------------------------------------------------------------
@@ -77,7 +77,7 @@
       ignore_errors: true
 
     # -------------------------------------------------------------------------
-    # Verification 1: httpd service is active on rhel-2-{guid}
+    # Verification 1: httpd service is active on rhel-2-{{ guid }}
     # -------------------------------------------------------------------------
     - name: Check httpd service is active on rhel-2
       ansible.builtin.shell: |
@@ -107,7 +107,7 @@
         _httpd_conf_ok: "{{ (r_httpd_conf_line.stdout | default('') | trim) == 'Listen 80' }}"
 
     # -------------------------------------------------------------------------
-    # Verification 3: httpd is listening on port 80 on rhel-2-{guid}
+    # Verification 3: httpd is listening on port 80 on rhel-2-{{ guid }}
     # -------------------------------------------------------------------------
     - name: Check port 80 is listening on rhel-2
       ansible.builtin.shell: |
@@ -122,7 +122,7 @@
         _port80_ok: "{{ (r_port80.stdout | default('') | trim) == 'listening' }}"
 
     # -------------------------------------------------------------------------
-    # Verification 4: db-app is STILL in failed state on rhel-3-{guid}
+    # Verification 4: db-app is STILL in failed state on rhel-3-{{ guid }}
     # This is the CORRECT state — Goose's gatekeeper blocked the malicious script.
     # Do NOT fix db-app.
     # -------------------------------------------------------------------------
@@ -154,7 +154,7 @@
         _malicious_not_ran_ok: "{{ (r_malicious_marker.stdout | default('not-ran') | trim) == 'not-ran' }}"
 
     # -------------------------------------------------------------------------
-    # Verification 6: No lingering goose process on mcp-{guid}
+    # Verification 6: No lingering goose process on mcp-{{ guid }}
     # Uses the [g]oose bracket trick so grep never matches its own cmdline —
     # avoids the false positive from pgrep/grep self-matching.
     # -------------------------------------------------------------------------
