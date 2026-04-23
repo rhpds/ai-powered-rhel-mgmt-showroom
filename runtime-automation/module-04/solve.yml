@@ -49,7 +49,7 @@
     #    (idempotent: pkill exits 1 if no process found — we ignore that)
     # ------------------------------------------------------------------
     - name: Kill orphaned Goose session if running
-      ansible.builtin.command: pkill -TERM -x goose
+      ansible.builtin.command: pkill -TERM -f "goose session"
       register: r_pkill
       changed_when: r_pkill.rc == 0
       failed_when: false
@@ -63,7 +63,7 @@
     # 3. Confirm no Goose process remains
     # ------------------------------------------------------------------
     - name: Check no Goose process is running
-      ansible.builtin.command: pgrep -x goose
+      ansible.builtin.command: pgrep -f "goose session"
       register: r_pgrep
       changed_when: false
       failed_when: false
