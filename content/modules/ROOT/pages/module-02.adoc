@@ -21,7 +21,7 @@ The terminal is connected to:
 
 NOTE: Hosts in your environment all contain {guid}. In a shared environment like the inventory at the https://console.redhat.com[Hybrid Cloud Console^], you might see similarly named hosts, but this unique identifier is for your systems.  
 
-Goose also has a graphical user interface (GUI), but you’ll be using the command line interface (CLI).
+Goose also has a graphical user interface (GUI), but you'll be using the command line interface (CLI).
 
 In the MCP terminal window, start a tmux session by running: 
 
@@ -98,7 +98,7 @@ That is to be expected.
 [%collapsible]
 ====
 
-Goose says you’re connected, but to be completely sure, you should run a prompt to verify.  Start with asking how many systems are connected to Red Hat Lightspeed at the Hybrid Cloud Console (also known as console.redhat.com) by running the following prompt:
+Goose says you're connected, but to be completely sure, you should run a prompt to verify.  Start with asking how many systems are connected to Red Hat Lightspeed at the Hybrid Cloud Console (also known as console.redhat.com) by running the following prompt:
 
 [source,sh,role="send-to-terminal",subs="attributes"]
 ----
@@ -137,7 +137,7 @@ The output should look similar to:
 .Red Hat Satellite Inventory Count
 image::lb1305_M2_ConnectedSatellite.png[link=self, window=blank, width=100%]
 
-Unlike the Hybrid Cloud Console inventory which is shared, the Satellite inventory is a private environment - you will not see other people’s systems and you will only see your hosts.
+Unlike the Hybrid Cloud Console inventory which is shared, the Satellite inventory is a private environment - you will not see other people's systems and you will only see your hosts.
 
 This confirms that Goose is able to communicate with your Satellite server using the Satellite MCP server.
 
@@ -149,7 +149,7 @@ This confirms that Goose is able to communicate with your Satellite server using
 [%collapsible]
 ====
 
-The RHEL MCP server looks in more detail at specific systems - to test it out you’ll need to ask about a specific RHEL system.
+The RHEL MCP server looks in more detail at specific systems - to test it out you'll need to ask about a specific RHEL system.
 
 [source,sh,role="send-to-terminal",subs="attributes"]
 ----
@@ -215,9 +215,9 @@ Log into the Hybrid Cloud Console with the following credentials: +
 
 **Satellite**
 
-To log into the Satellite UI, use a web browser to navigate to the https://satellite-{guid}.apps.ocpvdev01.rhdp.net[Satellite UI^].
+To log into the Satellite UI, use a web browser to navigate to the {satellite_url}[Satellite UI^].
 
-To log in, you’ll need the following credentials to log into the Satellite Web UI.
+To log in, you'll need the following credentials to log into the Satellite Web UI.
 
 You can copy and paste each of them below.
 
@@ -235,7 +235,7 @@ Now click `+Log In+`.
 =====
 
 
-After running this series of checks you now know that the various MCP servers are working in your environment and you’re ready to dig in a little deeper. 
+After running this series of checks you now know that the various MCP servers are working in your environment and you're ready to dig in a little deeper. 
 Continue to the next module.
 
 ifeval::["{run_e2e_load_test}" == "true"]
@@ -252,4 +252,3 @@ ifeval::["{run_e2e_load_test}" == "true"]
 ====
 =====
 endif::[]
-
