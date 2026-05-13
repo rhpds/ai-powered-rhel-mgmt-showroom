@@ -108,20 +108,6 @@ image::lb1305_M4_Sec_backend.png[link=self, window=blank, width=100%]
 This helps you see target output from the backend servers connected to your Satellite.  +
 Since they were made from the same base image, the information should be similar, but it may be affected by the Satellite content views as to what fixes are available. +
 
-Now, you should see about creating a report that is informed by all of the various MCP servers that you have access to.  +
-To help focus it, let’s get even more specific on the systems and tools used.
-
-
-[source,sh,role="send-to-terminal",subs="attributes"]
-----
-Help me create a plan to address all important and critical CVEs across rhel-1-{guid}, rhel-2-{guid}, rhel-3-{guid}, and rhel-4-{guid}. Use ONLY the Lightspeed MCP and the RHEL MCP servers when evaluating rhel-1-{guid} and rhel-2-{guid}.  Use ONLY the Satellite MCP AND the RHEL MCP servers when evaluating rhel-3-{guid} and rhel-4-{guid}. Provide the results in an executive report style summary and include benefits of the upgrade and an estimate of the downtime it will take to resolve the issues discovered.
-----
-
-.Overall CVE Mitigation Plan
-image::lb1305_M4_CVE_Plan.png[link=self, window=blank, width=100%]
-
-This summary should include a summary of what needs to be changed to secure the system, how long it might take for the resolution, benefits of the change, and a recommended action plan. 
-
 ====
 =====
 
