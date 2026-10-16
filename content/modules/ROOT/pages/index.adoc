@@ -56,7 +56,7 @@ Preconfigured for you on the MCP host are the following MCP servers:
 * https://rhel-lightspeed.github.io/linux-mcp-server/[MCP server for Red Hat Enterprise Linux (RHEL) ^]
 
 You will be using *Goose* as your local AI agent.  https://block.github.io/goose/[Goose^] is an open source, extensible AI agent. +
-Goose is configured to use LiteLLM as a provider, with https://github.com/MiniMax-AI/MiniMax-M2[minimax-m2^] as a model. +
+Goose is configured to use LiteLLM as a provider, with https://www.minimax.io/models/text[minimax-m2-5^] as a model. +
 This is all pre-configured for you in the segmented network that Infinicorp is providing.  
 
 These MCP servers are not generally available:
