@@ -7,8 +7,8 @@ image::lb1305_M1_Infinicorp_Logo.png[link=self, window=blank, width=100%]
 
 We need your help to update Infinicorp’s management of their Red Hat Enterprise Linux (RHEL) environments.
 
-Infinicorp Robotics Solutions, headquartered here in Atlanta, GA, is a large multi-national corporation focused on electronics manufacturing across a variety of industries.  +
-We got our start selling vending machines for a wide variety of products in Georgia, but over time we have branched out into the field of robotics and have a goal of being the leading world wide seller and distributor of autonomous robots.
+Infinicorp Robotics Solutions is a large multi-national corporation focused on electronics manufacturing across a variety of industries.  +
+We got our start selling vending machines for a wide variety of products, but over time we have branched out into the field of robotics and have a goal of being the leading world wide seller and distributor of autonomous robots.
 
 
 Infinicorp has some challenges around the number of management interfaces that we have across our disparate systems.  Our technical staff are used to working in a terminal and don’t want to be bothered to go to a variety of different user interfaces to get critical systems information.
