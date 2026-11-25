@@ -23,9 +23,9 @@ NOTE: Hosts in your environment all contain {guid}. In a shared environment like
 
 Goose also has a graphical user interface (GUI), but you'll be using the command line interface (CLI).
 
-In the MCP terminal window, start a tmux session by running: 
+In the MCP terminal window, start a tmux session. When a command block shows **Run in terminal**, you can use it to run the command in the active MCP terminal, or use **Copy** and paste it yourself. Paste Goose prompts only after the Goose session is ready.
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 tmux
 ----
@@ -35,7 +35,7 @@ If you choose to copy/paste, depending on your computer configuration you may ne
 
 Then, start a Goose session by running: 
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 goose session
 ----

@@ -16,7 +16,7 @@ This module will have you querying Goose to check on this business critical work
 You should already have the MCP Server Terminal open from the previous module. + 
 If it isn’t already running, in the MCP terminal window, start a Goose session by running: 
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 goose session
 ----
