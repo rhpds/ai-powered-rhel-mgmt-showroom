@@ -18,7 +18,7 @@ This module will have you querying Goose to check on overall security status and
 You should already have the MCP Server Terminal open from the previous module. + 
 If it isn’t already running, in the MCP terminal window, start a Goose session by running: 
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 goose session
 ----
@@ -39,7 +39,7 @@ WARNING: Be sure you ended the session from the previous module before starting 
 Start with asking Goose to give you a report on the security posture.  +
 In this prompt you’ll ask all three MCP servers to contribute to the report to help you understand at a high level where things stand at this moment.
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 I need a report to share with my security operations team to assess the current security posture of our installed servers. Can you provide all the relevant information of my install base (security advisories, vulnerabilities, compliance data, and malware) with the available data from the Lightspeed, Satellite, and RHEL tools?
 ----
@@ -67,7 +67,7 @@ Now you should really delve into Vulnerabilities.
 
 Lets get a high level overview of CVEs first, then work on a remediation plan. 
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 Give me a count of all CVEs that affect my environment AND list the top 5 most important to fix based on the criticality of the vulnerability.
 ----
@@ -87,7 +87,7 @@ Some of these systems aren’t in your environment, so you should do like you di
 
 Start with the frontend systems:
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 Use both the Lightspeed MCP and the RHEL MCP servers to help me create a plan to address important and critical CVEs for rhel-1-{guid} and rhel-2-{guid}. 
 ----
@@ -97,7 +97,7 @@ image::lb1305_M4_Sec_frontend.png[link=self, window=blank, width=100%]
 
 After you finish reviewing the results, repeat with the backend systems. +
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 Use ONLY the Satellite MCP AND the RHEL MCP servers to help me create a plan to address important and critical CVEs for rhel-3-{guid} and rhel-4-{guid}. 
 ----
@@ -124,7 +124,7 @@ These MCP servers might be able to help. +
 
 Start by asking the MCP servers what you already know - are they being scanned for CIS Level 1 Server?
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 Are my systems being evaluated for CIS Level 1 Server compliance? Provide a simple response in the key findings format.
 ----
@@ -140,7 +140,7 @@ Let’s separate this out by your tools again, using Red Hat Lightspeed for the 
 
 Let’s start with the front end systems: 
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 Help me figure out how to enable CIS Level 1 Server compliance for rhel-1-{guid} and rhel-2-{guid}. Specifically I’d like to use Red Hat Lightspeed’s compliance service to create a policy and scan for CIS Level 1 Server policy compliance using either MCP or the Lightspeed UI.
 ----
@@ -153,7 +153,7 @@ Once scanned, there are steps you’ll need to take to remediate any issues that
 
 Since the tools are different for the backend, let’s run a prompt on how to use Satellite for compliance scanning:
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 Help me figure out how to enable CIS Level 1 Server compliance for rhel-3-{guid} and rhel-4-{guid}.  Specifically I’d like to use Red Hat Satellite to scan for compliance.
 ----
@@ -174,7 +174,7 @@ The lab environment has limited context available. +
 To help make sure that you have as consistent of a lab experience as possible, you will exit Goose at the end of each module and restart it in the next module. +
 In the Goose session enter: 
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 /quit
 ----

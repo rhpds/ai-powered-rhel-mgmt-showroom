@@ -23,9 +23,9 @@ NOTE: Hosts in your environment all contain {guid}. In a shared environment like
 
 Goose also has a graphical user interface (GUI), but you'll be using the command line interface (CLI).
 
-In the MCP terminal window, start a tmux session by running: 
+In the MCP terminal window, start a tmux session. *Run in terminal* sends the block to the active MCP terminal and presses Enter. Use it for Goose prompts and slash commands only when Goose is open and ready for input. You can also use *Copy* and paste the text yourself.
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 tmux
 ----
@@ -35,7 +35,7 @@ If you choose to copy/paste, depending on your computer configuration you may ne
 
 Then, start a Goose session by running: 
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 goose session
 ----
@@ -68,7 +68,7 @@ As a reminder, the three MCP servers are:
 
 Make sure you are in the Goose session, and run the following prompt:
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 Give me a simple list of the MCP servers you are currently connected to.
 ----
@@ -100,7 +100,7 @@ That is to be expected.
 
 Goose says you're connected, but to be completely sure, you should run a prompt to verify.  Start with asking how many systems are connected to Red Hat Lightspeed at the Hybrid Cloud Console (also known as console.redhat.com) by running the following prompt:
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 How many systems are connected to Red Hat Lightspeed? 
 ----
@@ -125,7 +125,7 @@ This confirms that Goose is able to communicate with the APIs over at the Hybrid
 
 Now to check the Satellite MCP server, ask Goose what systems are connected to the Satellite.
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 What hosts are connected to my Satellite? 
 ----
@@ -151,7 +151,7 @@ This confirms that Goose is able to communicate with your Satellite server using
 
 The RHEL MCP server looks in more detail at specific systems - to test it out you'll need to ask about a specific RHEL system.
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 Check the current CPU load and memory usage for rhel-3-{guid} 
 ----
@@ -176,7 +176,7 @@ The lab environment has limited context available. +
 To help make sure that you have as consistent of a lab experience as possible, you will exit Goose at the end of each module and restart it in the next module. +
 In the Goose session enter: 
 
-[source,sh,subs="attributes"]
+[source,sh,role="execute",subs="attributes"]
 ----
 /quit
 ----
