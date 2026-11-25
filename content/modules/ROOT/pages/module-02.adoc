@@ -80,6 +80,8 @@ Review the output and make sure that you see the following listed:
 * Satellite MCP Server
 * RHEL MCP Server
 
+NOTE: If all three MCP servers do not appear, wait a minute or two and try again.  In very busy lab environments it may take a couple minutes to pull and start the container image for a MCP server.
+
 It should appear similar to the image below:
 
 .List of MCP Servers
