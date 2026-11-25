@@ -158,19 +158,3 @@ This will end the Goose session and return you to the terminal prompt.
 Now you should have a good understanding of the workloads in the environment and what you can do to improve them for improved performance and stability.
 
 Continue to the next module.
-
-
-ifeval::["{run_e2e_load_test}" == "true"]
-=====
-.End-to-End Validation (RHDP Only) ✅
-[%collapsible]
-====
-++++
-<div class="solve-button-placeholder" data-module="module-03"></div>
-++++
-++++
-<div class="validate-button-placeholder" data-module="module-03"></div>
-++++
-====
-=====
-endif::[]
